@@ -1,0 +1,7 @@
+base   wordimport
+author Andreas Gohr
+email  dokuwiki@cosmocode.de
+date   2024-07-22
+name   wordimport plugin
+desc   Import word documents into DokuWiki
+url    https://www.dokuwiki.org/plugin:wordimport
