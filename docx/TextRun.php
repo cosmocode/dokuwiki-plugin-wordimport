@@ -2,7 +2,7 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-class TextRun
+class TextRun  // this is not a paragraph!
 {
     protected $formatting = [
         'bold' => false,
@@ -19,7 +19,7 @@ class TextRun
     {
         $br = $tr->xpath('w:br');
         if (!empty($br)) {
-            $this->text = "\n";
+            $this->text = "\n";  // FIXME this might need to be a forced line break (unless used in CodeBlock)
             return;
         }
 

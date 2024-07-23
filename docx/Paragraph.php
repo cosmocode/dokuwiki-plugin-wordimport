@@ -2,12 +2,12 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-class Paragraph
+class Paragraph extends AbstractParagraph
 {
     /** @var TextRun[] */
     protected $texts = [];
 
-    public function __construct(\SimpleXMLElement $p)
+    public function parse(\SimpleXMLElement $p)
     {
         $trs = $p->xpath('w:r');
         foreach ($trs as $tr) {
@@ -16,7 +16,7 @@ class Paragraph
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $result = '';
 

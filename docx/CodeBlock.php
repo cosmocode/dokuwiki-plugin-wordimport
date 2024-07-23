@@ -2,11 +2,11 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-class CodeBlock
+class CodeBlock extends AbstractParagraph
 {
     protected $text = '';
 
-    public function __construct(\SimpleXMLElement $p)
+    public function parse(\SimpleXMLElement $p)
     {
         $runs = $p->xpath('w:r');
         foreach ($runs as $run) {
@@ -15,7 +15,7 @@ class CodeBlock
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return '<code>' . "\n" . $this->text  ."\n" . '</code>';
     }

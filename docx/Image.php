@@ -2,14 +2,14 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-class Image
+class Image extends AbstractParagraph
 {
 
     protected $src = '';
     protected $alignment = '';
     protected $alt = '';
 
-    public function __construct(\SimpleXMLElement $p)
+    public function parse(\SimpleXMLElement $p)
     {
         $blip = $p->xpath('w:r/w:drawing/wp:inline//a:blip')[0];
         $this->src = $blip->attributes('r', true)->embed;
@@ -23,7 +23,7 @@ class Image
         $this->alt = $this->clean((string)$alt['descr']);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $src = $this->src; // FIXME needs to resolve the ID
 

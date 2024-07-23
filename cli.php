@@ -29,11 +29,9 @@ class cli_plugin_wordimport extends \dokuwiki\Extension\CLIPlugin
     /** @inheritDoc */
     protected function main(Options $options)
     {
-        $doc = new \dokuwiki\plugin\wordimport\docx\Doc('sample.docx');
+        $doc = new \dokuwiki\plugin\wordimport\docx\DocX('sample.docx');
 
-        $doc->parse();
-
-
+        echo $doc->getDocument();
 
     }
 }
