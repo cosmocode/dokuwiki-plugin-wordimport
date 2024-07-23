@@ -23,14 +23,18 @@ class Doc {
         io_rmdir($this->tmpdir, true);
     }
 
-    public function parse()
+    protected function registerNamespaces($xml)
     {
-        $xml = simplexml_load_file($this->tmpdir . '/word/document.xml');
-
-        $namespaces = $xml->getDocNamespaces();
+        $namespaces = $xml->getDocNamespaces(true);
         foreach ($namespaces as $prefix => $namespace) {
             $xml->registerXPathNamespace($prefix, $namespace);
         }
+    }
+
+    public function parse()
+    {
+        $xml = simplexml_load_file($this->tmpdir . '/word/document.xml');
+        $this->registerNamespaces($xml);
 
         foreach ($xml->xpath('//w:p') as $p) {
             $obj = $this->handleParagraph($p);
@@ -40,9 +44,23 @@ class Doc {
 
     public function handleParagraph($p)
     {
+        $this->registerNamespaces($p); // it's odd why we need to reregister namespaces here, but it's necessary
+
+        // code blocks
+        if($match = $p->xpath('w:pPr/w:rPr/w:rFonts')) {
+            if(in_array($match[0]->attributes('w', true)->ascii, ['Courier New', 'Consolas'])) { // fixme make configurable
+                return new CodeBlock($p);
+            }
+        }
+
         // headings
         if($p->xpath('w:pPr/w:pStyle[contains(@w:val, "Heading")]')) {
             return new Heading($p);
+        }
+
+        // images
+        if($p->xpath('w:r/w:drawing/wp:inline//a:blip')) {
+            return new Image($p);
         }
 
         // text paragraphs

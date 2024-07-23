@@ -9,6 +9,7 @@ class TextRun
         'italic' => false,
         'underline' => false,
         'strike' => false,
+        'mono' => false,
     ];
 
     protected $text = '';
@@ -29,16 +30,18 @@ class TextRun
 
     public function __toString()
     {
-        $text = $this->text;
-
-        if ($this->formatting['bold']) $text = '**' . $text . '**';
-        if ($this->formatting['italic']) $text = '//' . $text . '//';
-        if ($this->formatting['underline']) $text = '__' . $text . '__';
-        if ($this->formatting['strike']) $text = '~~' . $text . '~~';
-
-        return $text;
+        return $this->text;
     }
 
+    public function getFormatting()
+    {
+        return $this->formatting;
+    }
+
+    public function isWhiteSpace()
+    {
+        return ctype_space($this->text);
+    }
 
     /**
      * @see http://www.datypic.com/sc/ooxml/e-w_rPr-4.html
@@ -46,26 +49,35 @@ class TextRun
      */
     public function parseFormatting(\SimpleXMLElement $textRun)
     {
+        $xml = $textRun->asXML();
+
         $result = $textRun->xpath('w:rPr');
         if (empty($result)) return;
 
-        foreach ($result[0]->children() as $child) {
+        $r = $result[0]->asXML();
+
+        foreach ($result[0]->children('w', true) as $child) {
             switch ($child->getName()) {
-                case 'w:b':
-                case 'w:bCs':
+                case 'b':
+                case 'bCs':
                     $this->formatting['bold'] = true;
                     break;
-                case 'w:i':
-                case 'w:iCs':
-                case 'w:em':
+                case 'i':
+                case 'iCs':
+                case 'em':
                     $this->formatting['italic'] = true;
                     break;
-                case 'w:u':
+                case 'u':
                     $this->formatting['underline'] = true;
                     break;
-                case 'w:strike':
-                case 'w:dstrike':
+                case 'strike':
+                case 'dstrike':
                     $this->formatting['strike'] = true;
+                    break;
+                case 'rFonts':
+                    if (in_array($child->attributes('w', true)->ascii, ['Courier New', 'Consolas'])) { // fixme make configurable
+                        $this->formatting['mono'] = true;
+                    }
                     break;
             }
         }
