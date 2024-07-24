@@ -1,0 +1,5 @@
+====== Word Import ======
+
+This dialog allows you to import a Microsoft Word document into a DokuWiki page. The document is converted to DokuWiki syntax and can be edited afterwards.
+
+If the page already exists, the imported content will create a new page revision. If the page does not exist, a new page will be created. Images contained in the Word document will be uploaded to the media manager.

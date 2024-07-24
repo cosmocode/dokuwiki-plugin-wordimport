@@ -1,5 +1,6 @@
 <?php
 
+use dokuwiki\plugin\wordimport\docx\DocX;
 use splitbrain\phpcli\Options;
 
 /**
@@ -13,17 +14,12 @@ class cli_plugin_wordimport extends \dokuwiki\Extension\CLIPlugin
     /** @inheritDoc */
     protected function setup(Options $options)
     {
-        $options->setHelp('FIXME: What does this CLI do?');
+        $options->setHelp('Import Microsoft Word documents into DokuWiki');
 
         // main arguments
-        //$options->registerArgument('FIXME:argumentName', 'FIXME:argument description', 'FIXME:required? true|false');
+        $options->registerArgument('docx', 'The .docx Word file', 'true');
+        $options->registerArgument('page', 'The page ID to where the contents should be imported. Will be overwritten if exists.', 'true');
 
-        // options
-        // $options->registerOption('FIXME:longOptionName', 'FIXME: helptext for option', 'FIXME: optional shortkey', 'FIXME:needs argument? true|false', 'FIXME:if applies only to subcommand: subcommandName');
-
-        // sub-commands and their arguments
-        // $options->registerCommand('FIXME:subcommandName', 'FIXME:subcommand description');
-        // $options->registerArgument('FIXME:subcommandArgumentName', 'FIXME:subcommand-argument description', 'FIXME:required? true|false', 'FIXME:subcommandName');
     }
 
     /** @inheritDoc */
@@ -31,13 +27,8 @@ class cli_plugin_wordimport extends \dokuwiki\Extension\CLIPlugin
     {
         auth_setup(); // we need this for ACL checks
 
-
-        $doc = new \dokuwiki\plugin\wordimport\docx\DocX('sample.docx');
-
-
-        $doc->import('test:import');
-
-        echo $doc->getDocument();
-
+        [$docx, $page] = $options->getArgs();
+        $doc = new DocX($docx);
+        $doc->import($page);
     }
 }
