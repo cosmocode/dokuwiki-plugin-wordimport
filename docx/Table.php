@@ -37,6 +37,4 @@ class Table extends AbstractParagraph
         }
         return $text;
     }
-
-
 }

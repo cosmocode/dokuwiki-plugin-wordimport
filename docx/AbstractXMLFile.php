@@ -9,7 +9,8 @@ abstract class AbstractXMLFile
     /**
      * @param DocX $docx The DocX object to work on
      */
-    public function __construct(DocX $docx) {
+    public function __construct(DocX $docx)
+    {
         $this->docx = $docx;
         $this->parse();
     }
@@ -28,9 +29,8 @@ abstract class AbstractXMLFile
     {
         $namespaces = $xml->getDocNamespaces(true);
         foreach ($namespaces as $prefix => $namespace) {
-            if(!$prefix) $prefix = 'default';
+            if (!$prefix) $prefix = 'default';
             $xml->registerXPathNamespace($prefix, $namespace);
         }
     }
-
 }

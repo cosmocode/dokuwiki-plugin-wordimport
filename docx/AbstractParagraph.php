@@ -2,8 +2,8 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-abstract class AbstractParagraph {
-
+abstract class AbstractParagraph
+{
     protected $docx;
     protected $p;
 
@@ -11,7 +11,8 @@ abstract class AbstractParagraph {
      * @param DocX $docx The main docx object for accessing shared data
      * @param \SimpleXMLElement $p The paragraph XML element
      */
-    public function __construct(DocX $docx, \SimpleXMLElement $p) {
+    public function __construct(DocX $docx, \SimpleXMLElement $p)
+    {
         $this->docx = $docx;
         $this->p = $p;
     }
@@ -34,7 +35,8 @@ abstract class AbstractParagraph {
      *
      * @return bool
      */
-    public function mergeToPrevious(): bool {
+    public function mergeToPrevious(): bool
+    {
         return false;
     }
 }

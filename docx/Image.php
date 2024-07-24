@@ -4,7 +4,6 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 class Image extends Paragraph
 {
-
     protected $rId = '';
     protected $alt = '';
 
@@ -56,7 +55,7 @@ class Image extends Paragraph
      */
     protected function copyImage($src, $target)
     {
-        if(file_exists(mediaFN($target)) && md5_file($src) === md5_file(mediaFN($target))) {
+        if (file_exists(mediaFN($target)) && md5_file($src) === md5_file(mediaFN($target))) {
             // image exists and is the same
             return;
         }

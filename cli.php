@@ -1,5 +1,6 @@
 <?php
 
+use dokuwiki\Extension\CLIPlugin;
 use dokuwiki\plugin\wordimport\docx\DocX;
 use splitbrain\phpcli\Options;
 
@@ -9,7 +10,7 @@ use splitbrain\phpcli\Options;
  * @license GPL 2 http://www.gnu.org/licenses/gpl-2.0.html
  * @author  Andreas Gohr <dokuwiki@cosmocode.de>
  */
-class cli_plugin_wordimport extends \dokuwiki\Extension\CLIPlugin
+class cli_plugin_wordimport extends CLIPlugin
 {
     /** @inheritDoc */
     protected function setup(Options $options)
@@ -19,7 +20,6 @@ class cli_plugin_wordimport extends \dokuwiki\Extension\CLIPlugin
         // main arguments
         $options->registerArgument('docx', 'The .docx Word file', 'true');
         $options->registerArgument('page', 'The page ID to where the contents should be imported. Will be overwritten if exists.', 'true');
-
     }
 
     /** @inheritDoc */

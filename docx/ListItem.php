@@ -4,7 +4,6 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 class ListItem extends Paragraph
 {
-
     protected $level = 0;
     protected $type = 'unordered';
 
@@ -28,6 +27,4 @@ class ListItem extends Paragraph
     {
         return true;
     }
-
-
 }
