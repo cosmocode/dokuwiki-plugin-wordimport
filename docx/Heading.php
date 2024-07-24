@@ -9,10 +9,10 @@ class Heading extends AbstractParagraph
     protected $text = '';
 
 
-    public function parse(\SimpleXMLElement $p)
+    public function parse()
     {
-        $this->text = $p->xpath('w:r/w:t')[0];
-        $this->level =  substr($p->xpath('w:pPr/w:pStyle')[0]->attributes('w', true)->val, -1);
+        $this->text = $this->p->xpath('w:r/w:t')[0];
+        $this->level =  substr($this->p->xpath('w:pPr/w:pStyle')[0]->attributes('w', true)->val, -1);
         if($this->level < 1) $this->level = 1;
         if($this->level > 5) $this->level = 5;
     }

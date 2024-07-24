@@ -5,15 +5,21 @@ namespace dokuwiki\plugin\wordimport\docx;
 abstract class AbstractParagraph {
 
     protected $docx;
+    protected $p;
 
-    public function __construct(DocX $docx) {
+    /**
+     * @param DocX $docx The main docx object for accessing shared data
+     * @param \SimpleXMLElement $p The paragraph XML element
+     */
+    public function __construct(DocX $docx, \SimpleXMLElement $p) {
         $this->docx = $docx;
+        $this->p = $p;
     }
 
     /**
-     * @param \SimpleXMLElement $p The paragraph XML element
+     * Parse the paragraph XML element
      */
-    abstract public function parse(\SimpleXMLElement $p);
+    abstract public function parse();
 
     /**
      * @return string The DokuWiki syntax representation of the paragraph

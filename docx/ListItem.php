@@ -8,11 +8,11 @@ class ListItem extends Paragraph
     protected $level = 0;
     protected $type = 'unordered';
 
-    public function parse(\SimpleXMLElement $p)
+    public function parse()
     {
-        parent::parse($p);
-        $this->level = (int)$p->xpath('w:pPr/w:numPr/w:ilvl')[0]->attributes('w', true)->val;
-        $id = (int)$p->xpath('w:pPr/w:numPr/w:numId')[0]->attributes('w', true)->val;
+        parent::parse($this->p);
+        $this->level = (int)$this->p->xpath('w:pPr/w:numPr/w:ilvl')[0]->attributes('w', true)->val;
+        $id = (int)$this->p->xpath('w:pPr/w:numPr/w:numId')[0]->attributes('w', true)->val;
         $this->type = $this->docx->getNumbering()->getType($id);
     }
 

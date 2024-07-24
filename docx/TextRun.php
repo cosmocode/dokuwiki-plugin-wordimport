@@ -12,17 +12,20 @@ class TextRun  // this is not a paragraph!
         'mono' => false,
     ];
 
+
     protected $text = '';
 
-
-    public function __construct(\SimpleXMLElement $tr)
+    /**
+     * @param \SimpleXMLElement $tr
+     * @param string $newline The code for newlines
+     */
+    public function __construct(\SimpleXMLElement $tr, $newline = '\\\\ ')
     {
         $br = $tr->xpath('w:br');
         if (!empty($br)) {
-            $this->text = "\n";  // FIXME this might need to be a forced line break (unless used in CodeBlock)
+            $this->text = $newline;
             return;
         }
-
 
         $this->parseFormatting($tr);
         $this->text = $tr->xpath('w:t')[0];

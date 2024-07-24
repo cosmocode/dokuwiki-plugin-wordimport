@@ -2,42 +2,27 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-class Image extends AbstractParagraph
+class Image extends Paragraph
 {
 
     protected $src = '';
-    protected $alignment = '';
     protected $alt = '';
 
-    public function parse(\SimpleXMLElement $p)
+    public function parse()
     {
-        $blip = $p->xpath('w:r/w:drawing/wp:inline//a:blip')[0];
+        parent::parse();
+
+        $blip = $this->p->xpath('w:r/w:drawing/wp:inline//a:blip')[0];
         $this->src = $blip->attributes('r', true)->embed;
 
-        $alignment = $p->xpath('w:pPr/w:jc');
-        if ($alignment) {
-            $this->alignment = (string)$alignment[0]->attributes('w', true)->val;
-        }
-
-        $alt = $p->xpath('w:r/w:drawing/wp:inline/wp:docPr')[0];
+        $alt = $this->p->xpath('w:r/w:drawing/wp:inline/wp:docPr')[0];
         $this->alt = $this->clean((string)$alt['descr']);
     }
 
     public function __toString(): string
     {
         $src = $this->src; // FIXME needs to resolve the ID
-
-        switch ($this->alignment) {
-            case 'left':
-                $src = "$src ";
-                break;
-            case 'right':
-                $src = " $src";
-                break;
-            case 'center':
-                $src = " $src ";
-                break;
-        }
+        $src = $this->alignmentPadding($src);
 
         return '{{' . $src . '|' . $this->alt . '}}';
     }

@@ -6,11 +6,11 @@ class CodeBlock extends AbstractParagraph
 {
     protected $text = '';
 
-    public function parse(\SimpleXMLElement $p)
+    public function parse()
     {
-        $runs = $p->xpath('w:r');
+        $runs = $this->p->xpath('w:r');
         foreach ($runs as $run) {
-            $tr = new TextRun($run);
+            $tr = new TextRun($run, "\n");
             $this->text .= $tr->__toString();
         }
     }
