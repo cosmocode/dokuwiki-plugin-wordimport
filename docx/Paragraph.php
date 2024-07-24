@@ -10,6 +10,15 @@ class Paragraph extends AbstractParagraph
     /** @var string */
     protected $alignment = '';
 
+    /** @var array DokuWiki Syntax for the formatting */
+    protected $fSyntax = [
+        'bold' => ['**', '**'],
+        'italic' => ['//', '//'],
+        'underline' => ['__', '__'],
+        'strike' => ['<del>', '</del>'],
+        'mono' => ["''", "''"],
+    ];
+
     /** @inheritdoc */
     public function parse()
     {
@@ -27,32 +36,42 @@ class Paragraph extends AbstractParagraph
 
     /**
      * @inheritdoc
-     * @fixme this is not correctly joining text runs yet. We probably need a stack based approach to handle formatting changes
+     * @fixme this is not optimizing formatting by longest chain
      */
     public function __toString(): string
     {
         $result = '';
-
-        $currentText = '';
-        $lastFormatting = [];
+        $fStack = [];
 
         foreach ($this->texts as $text) {
-            // if the text is whitespace or has the same formatting as the last text append
-            if ($text->isWhiteSpace() || array_diff($text->getFormatting(), $lastFormatting) == []) {
-                $currentText .= $text->__toString();
+            // we don't want to wrap whitespace in formatting
+            if($text->isWhiteSpace()) {
+                $result .= $text->__toString();
                 continue;
             }
-            // add the collected text
-            if ($currentText !== '') {
-                $result .= $this->wrapFormatting($currentText, $lastFormatting);
-                $currentText = '';
+
+            $formatting = $text->getFormatting();
+
+            // close formatting that is not in the current text
+            while($fStack && !in_array(end($fStack), $formatting)) {
+                $this->closeFormatting($result, array_pop($fStack));
             }
-            // start a new text
-            $lastFormatting = $text->getFormatting();
-            $currentText = $text->__toString();
+
+            // open formatting that is in the current text
+            $new = array_diff($text->getFormatting(), $fStack);
+            foreach($new as $f) {
+                $this->openFormatting($result, $f);
+                $fStack[] = $f;
+            }
+
+            // add the text
+            $result .= $text->__toString();
         }
-        // add the last text
-        $result .= $this->wrapFormatting($currentText, $lastFormatting);
+
+        // close remaining formatting
+        while($fStack) {
+            $this->closeFormatting($result, array_pop($fStack));
+        }
 
         return $result;
     }
@@ -90,23 +109,34 @@ class Paragraph extends AbstractParagraph
         return $text;
     }
 
-    public function wrapFormatting($text, $formatting)
+    /**
+     * Open a formatting
+     *
+     * @param string $text The text currently worked on
+     * @param string $formatting Name of the formatting
+     * @return void
+     */
+    public function openFormatting(&$text, $formatting)
     {
-        if (ctype_space($text)) return $text; // no need to wrap whitespace
+        $text .= $this->fSyntax[$formatting][0];
+    }
 
-        // only wrap the text, not the whitespace around it
-        preg_match('/^(\s*)(.+?)(\s*)$/s', $text, $matches);
+    /**
+     * Close a formatting
+     *
+     * Handles whitespace at the end of the text
+     *
+     * @param string $text The text currently worked on
+     * @param string $formatting Name of the formatting
+     * @return void
+     */
+    public function closeFormatting(&$text, $formatting)
+    {
+        preg_match('/^(.+?)(\s*)$/s', $text, $matches);
+        $text = $matches[1];
+        $suffix = $matches[2];
 
-        $prefix = $matches[1];
-        $text = $matches[2];
-        $suffix = $matches[3];
-
-        if ($formatting['mono'] ?? false) $text = "''" . $text . "''";
-        if ($formatting['bold'] ?? false) $text = '**' . $text . '**';
-        if ($formatting['italic'] ?? false) $text = '//' . $text . '//';
-        if ($formatting['underline'] ?? false) $text = '__' . $text . '__';
-        if ($formatting['strike'] ?? false) $text = '~~' . $text . '~~';
-
-        return $prefix . $text . $suffix;
+        $text .= $this->fSyntax[$formatting][1];
+        $text .= $suffix;
     }
 }

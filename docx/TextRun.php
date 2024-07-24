@@ -28,7 +28,7 @@ class TextRun  // this is not a paragraph!
         }
 
         $this->parseFormatting($tr);
-        $this->text = $tr->xpath('w:t')[0] ?? '';
+        $this->text = (string) ($tr->xpath('w:t')[0] ?? '');
     }
 
     public function __toString()
@@ -36,9 +36,14 @@ class TextRun  // this is not a paragraph!
         return $this->text;
     }
 
+    /**
+     * A list of set formattings on this run
+     *
+     * @return string[]
+     */
     public function getFormatting()
     {
-        return $this->formatting;
+        return array_keys(array_filter($this->formatting));
     }
 
     public function isWhiteSpace()
@@ -52,12 +57,8 @@ class TextRun  // this is not a paragraph!
      */
     public function parseFormatting(\SimpleXMLElement $textRun)
     {
-        $xml = $textRun->asXML();
-
         $result = $textRun->xpath('w:rPr');
         if (empty($result)) return;
-
-        $r = $result[0]->asXML();
 
         foreach ($result[0]->children('w', true) as $child) {
             switch ($child->getName()) {

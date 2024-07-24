@@ -33,7 +33,7 @@ class Image extends Paragraph
         if (!str_starts_with($mime, 'image/')) return ''; // not an image
 
         $pageid = $this->docx->getPageId();
-        if ($pageid !== null) {
+        if ($pageid) {
             $target = $pageid . '-' . $this->rId . '.' . $ext;
             $this->copyImage($src, $target);
         } else {
