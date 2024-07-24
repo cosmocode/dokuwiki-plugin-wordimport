@@ -4,7 +4,6 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 class Relationships extends AbstractXMLFile
 {
-
     /**
      * @var array The relationships type -> id -> target
      */
@@ -49,5 +48,4 @@ class Relationships extends AbstractXMLFile
 
         return $this->relationships[$type][$id];
     }
-
 }

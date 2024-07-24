@@ -45,7 +45,7 @@ class Paragraph extends AbstractParagraph
 
         foreach ($this->texts as $text) {
             // we don't want to wrap whitespace in formatting
-            if($text->isWhiteSpace()) {
+            if ($text->isWhiteSpace()) {
                 $result .= $text->__toString();
                 continue;
             }
@@ -53,13 +53,13 @@ class Paragraph extends AbstractParagraph
             $formatting = $text->getFormatting();
 
             // close formatting that is not in the current text
-            while($fStack && !in_array(end($fStack), $formatting)) {
+            while ($fStack && !in_array(end($fStack), $formatting)) {
                 $this->closeFormatting($result, array_pop($fStack));
             }
 
             // open formatting that is in the current text
             $new = array_diff($text->getFormatting(), $fStack);
-            foreach($new as $f) {
+            foreach ($new as $f) {
                 $this->openFormatting($result, $f);
                 $fStack[] = $f;
             }
@@ -69,7 +69,7 @@ class Paragraph extends AbstractParagraph
         }
 
         // close remaining formatting
-        while($fStack) {
+        while ($fStack) {
             $this->closeFormatting($result, array_pop($fStack));
         }
 

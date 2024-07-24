@@ -6,11 +6,11 @@ use splitbrain\PHPArchive\Zip;
 
 class DocX
 {
-    protected $tmpdir = null;
-    protected $relationships = null;
-    protected $numbering = null;
-    protected $document = null;
-    protected $pageId = null;
+    protected $tmpdir;
+    protected $relationships;
+    protected $numbering;
+    protected $document;
+    protected $pageId;
 
     public function __construct($docx)
     {

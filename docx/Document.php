@@ -2,12 +2,11 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-
 class Document extends AbstractXMLFile
 {
     protected $text = '';
 
-    public function parse()
+    protected function parse()
     {
         $xml = $this->docx->loadXMLFile('/word/document.xml');
         $this->registerNamespaces($xml);
@@ -15,10 +14,10 @@ class Document extends AbstractXMLFile
         $last = null;
         foreach ($xml->xpath('//w:body')[0]->children('w', true) as $p) {
             $obj = $this->createParagraph($p);
-            if (!$obj) continue;
+            if (!$obj instanceof AbstractParagraph) continue;
             $obj->parse();
 
-            if ($obj->mergeToPrevious() && get_class($obj) === get_class($last)) {
+            if ($obj->mergeToPrevious() && get_class($obj) === ($last instanceof AbstractParagraph ? get_class($last) : self::class)) {
                 $this->text .= "\n";
             } elseif ($last) {
                 $this->text .= "\n\n";
@@ -36,7 +35,7 @@ class Document extends AbstractXMLFile
         $this->registerNamespaces($p); // it's odd why we need to reregister namespaces here, but it's necessary
 
         // tables
-        if($p->getName() == 'tbl') {
+        if ($p->getName() == 'tbl') {
             return new Table($this->docx, $p);
         }
 

@@ -2,7 +2,7 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
-class TextRun  // this is not a paragraph!
+class TextRun // this is not a paragraph!
 {
     protected $formatting = [
         'bold' => false,

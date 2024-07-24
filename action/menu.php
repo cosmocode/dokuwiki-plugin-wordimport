@@ -1,5 +1,6 @@
 <?php
 
+use dokuwiki\plugin\wordimport\MenuItem;
 use dokuwiki\Extension\ActionPlugin;
 use dokuwiki\Extension\EventHandler;
 use dokuwiki\Extension\Event;
@@ -28,7 +29,7 @@ class action_plugin_wordimport_menu extends ActionPlugin
      */
     public function handleMenuAssembly(Event $event, $param)
     {
-        if($event->data['view'] != 'page') return;
-        array_splice($event->data['items'], -1, 0, [new \dokuwiki\plugin\wordimport\MenuItem()]);
+        if ($event->data['view'] != 'page') return;
+        array_splice($event->data['items'], -1, 0, [new MenuItem()]);
     }
 }

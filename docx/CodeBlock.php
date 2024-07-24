@@ -17,6 +17,6 @@ class CodeBlock extends AbstractParagraph
 
     public function __toString(): string
     {
-        return '<code>' . "\n" . $this->text  ."\n" . '</code>';
+        return '<code>' . "\n" . $this->text  . "\n" . '</code>';
     }
 }

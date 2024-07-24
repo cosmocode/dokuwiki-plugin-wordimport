@@ -11,8 +11,8 @@ use dokuwiki\Menu\Item\AbstractItem;
  *
  * @package dokuwiki\plugin\dw2pdf
  */
-class MenuItem extends AbstractItem {
-
+class MenuItem extends AbstractItem
+{
     /** @var string do action for this plugin */
     protected $type = 'wordimport';
 
@@ -24,7 +24,8 @@ class MenuItem extends AbstractItem {
      *
      * @return string
      */
-    public function getLabel() {
+    public function getLabel()
+    {
         $hlp = plugin_load('action', 'wordimport_menu');
         return $hlp->getLang('page_button');
     }

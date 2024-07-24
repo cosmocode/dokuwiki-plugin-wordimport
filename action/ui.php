@@ -84,8 +84,10 @@ class action_plugin_wordimport_ui extends ActionPlugin
         $form->addHTML($this->locale_xhtml('intro'));
 
         $form->addFieldsetOpen();
+
         $upload = new InputElement('file', 'file', $this->getLang('uploadfield'));
         $upload->attr('accept', '.docx');
+
         $form->addElement($upload);
 
         $form->addTagOpen('p')->addClass('buttons');
