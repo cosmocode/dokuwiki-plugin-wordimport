@@ -28,6 +28,7 @@ abstract class AbstractXMLFile
     {
         $namespaces = $xml->getDocNamespaces(true);
         foreach ($namespaces as $prefix => $namespace) {
+            if(!$prefix) $prefix = 'default';
             $xml->registerXPathNamespace($prefix, $namespace);
         }
     }

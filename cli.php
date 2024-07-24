@@ -29,7 +29,13 @@ class cli_plugin_wordimport extends \dokuwiki\Extension\CLIPlugin
     /** @inheritDoc */
     protected function main(Options $options)
     {
+        auth_setup(); // we need this for ACL checks
+
+
         $doc = new \dokuwiki\plugin\wordimport\docx\DocX('sample.docx');
+
+
+        $doc->import('test:import');
 
         echo $doc->getDocument();
 

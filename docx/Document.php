@@ -9,7 +9,7 @@ class Document extends AbstractXMLFile
 
     public function parse()
     {
-        $xml = $this->docx->loadFile('/word/document.xml');
+        $xml = $this->docx->loadXMLFile('/word/document.xml');
         $this->registerNamespaces($xml);
 
         $last = null;

@@ -8,7 +8,7 @@ class Numbering extends AbstractXMLFile
 
     protected function parse()
     {
-        $xml = $this->docx->loadFile('word/numbering.xml');
+        $xml = $this->docx->loadXMLFile($this->docx->getRelationships()->getTarget('numbering'));
         $this->registerNamespaces($xml);
 
         $types = [];

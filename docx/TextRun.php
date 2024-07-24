@@ -28,7 +28,7 @@ class TextRun  // this is not a paragraph!
         }
 
         $this->parseFormatting($tr);
-        $this->text = $tr->xpath('w:t')[0];
+        $this->text = $tr->xpath('w:t')[0] ?? '';
     }
 
     public function __toString()
