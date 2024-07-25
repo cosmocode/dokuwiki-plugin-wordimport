@@ -56,7 +56,7 @@ class Paragraph extends AbstractParagraph
 
             // close all formatting that is not in the current text
             $toclose = array_diff($fStack, $formatting);
-            foreach($toclose as $f) {
+            foreach ($toclose as $f) {
                 // we need to make sure all formatting is closed, but we close by popping the
                 // stack. This ensures we don't create invalid nesting
                 while (in_array($f, $fStack)) {
@@ -91,8 +91,8 @@ class Paragraph extends AbstractParagraph
     protected function updateFormattingScores()
     {
         $len = count($this->texts);
-        if($len < 2) return;
-        for($i = $len - 2; $i >= 0; $i--) {
+        if ($len < 2) return;
+        for ($i = $len - 2; $i >= 0; $i--) {
             $this->texts[$i]->updateFormattingScores($this->texts[$i + 1]);
         }
     }
@@ -139,7 +139,7 @@ class Paragraph extends AbstractParagraph
      */
     public function openFormatting(&$text, $formatting)
     {
-        if(!isset($this->fSyntax[$formatting])) {
+        if (!isset($this->fSyntax[$formatting])) {
             throw new \RuntimeException("Unknown formatting: $formatting");
         }
 
@@ -161,7 +161,7 @@ class Paragraph extends AbstractParagraph
         $text = $matches[1];
         $suffix = $matches[2];
 
-        if(!isset($this->fSyntax[$formatting])) {
+        if (!isset($this->fSyntax[$formatting])) {
             throw new \RuntimeException("Unknown formatting: $formatting");
         }
 

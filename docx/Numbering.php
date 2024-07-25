@@ -16,7 +16,7 @@ class Numbering extends AbstractXMLFile
             $id = (int)$num->attributes('w', true)->abstractNumId;
             $types[$id] = [];
 
-            foreach($num->xpath('.//w:lvl') as $lvl) {
+            foreach ($num->xpath('.//w:lvl') as $lvl) {
                 $depth = (int)$lvl->attributes('w', true)->ilvl;
                 $lvlType = (string)$lvl->xpath('.//w:numFmt')[0]->attributes('w', true)->val;
                 $lvlType = ($lvlType === 'decimal') ? 'ordered' : 'unordered';

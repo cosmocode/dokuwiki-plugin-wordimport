@@ -4,7 +4,6 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 class TableCell extends AbstractParagraph
 {
-
     protected $vmerge = false;
     protected $span = 1;
     /** @var Paragraph[] */
@@ -13,7 +12,7 @@ class TableCell extends AbstractParagraph
     public function parse()
     {
 
-        $x = $this->p->asXML();
+        $this->p->asXML();
 
         // vertical merge
         $vMerge = $this->p->xpath('w:tcPr/w:vMerge');
@@ -41,9 +40,7 @@ class TableCell extends AbstractParagraph
         if ($this->vmerge) {
             $string = ":::";
         } else {
-            $string = join('\\\\ ', array_map(function ($p) {
-                return $p->__toString();
-            }, $this->paragraphs));
+            $string = implode('\\\\ ', array_map(static fn($p) => $p->__toString(), $this->paragraphs));
         }
 
         if ($this->paragraphs) {
@@ -54,5 +51,4 @@ class TableCell extends AbstractParagraph
         $string .= str_repeat('|', $this->span);
         return $string;
     }
-
 }
