@@ -24,7 +24,7 @@ class Paragraph extends AbstractParagraph
     {
         $trs = $this->p->xpath('w:r');
         foreach ($trs as $tr) {
-            $textRun = new TextRun($tr);
+            $textRun = new TextRun($this->docx, $tr);
             $this->texts[] = $textRun;
         }
         $this->updateFormattingScores();

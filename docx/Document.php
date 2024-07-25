@@ -17,7 +17,11 @@ class Document extends AbstractXMLFile
             if (!$obj instanceof AbstractParagraph) continue;
             $obj->parse();
 
-            if ($obj->mergeToPrevious() && get_class($obj) === ($last instanceof AbstractParagraph ? get_class($last) : self::class)) {
+            if (
+                $obj->mergeToPrevious() &&
+                $last &&
+                get_class($obj) === get_class($last)
+            ) {
                 $this->text .= "\n";
             } elseif ($last) {
                 $this->text .= "\n\n";
@@ -41,7 +45,7 @@ class Document extends AbstractXMLFile
 
         // code blocks
         if ($match = $p->xpath('w:pPr/w:rPr/w:rFonts')) {
-            if (in_array($match[0]->attributes('w', true)->ascii, ['Courier New', 'Consolas'])) { // fixme make configurable
+            if (in_array($match[0]->attributes('w', true)->ascii, $this->docx->getConf('codefonts'))) {
                 return new CodeBlock($this->docx, $p);
             }
         }

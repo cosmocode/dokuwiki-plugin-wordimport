@@ -17,15 +17,17 @@ class TextRun // this is not a paragraph!
         'mono' => 0,
     ];
 
-
     protected $text = '';
+    protected $docx;
 
     /**
      * @param \SimpleXMLElement $tr
      * @param string $newline The code for newlines
      */
-    public function __construct(\SimpleXMLElement $tr, $newline = '\\\\ ')
+    public function __construct(Docx $docx, \SimpleXMLElement $tr, $newline = '\\\\ ')
     {
+        $this->docx = $docx;
+
         $br = $tr->xpath('w:br');
         if (!empty($br)) {
             $this->text = $newline;
@@ -84,7 +86,7 @@ class TextRun // this is not a paragraph!
                     $this->formatting['strike'] = 1;
                     break;
                 case 'rFonts':
-                    if (in_array($child->attributes('w', true)->ascii, ['Courier New', 'Consolas'])) { // fixme make configurable
+                    if (in_array($child->attributes('w', true)->ascii, $this->docx->getConf('codefonts'))) {
                         $this->formatting['mono'] = 1;
                     }
                     break;

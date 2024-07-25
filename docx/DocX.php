@@ -12,8 +12,9 @@ class DocX
     protected $styles;
     protected $document;
     protected $pageId;
+    protected $config;
 
-    public function __construct($docx)
+    public function __construct($docx, $config)
     {
         $zip = new Zip();
         $zip->open($docx);
@@ -21,6 +22,8 @@ class DocX
         $this->tmpdir = io_mktmpdir();
         $zip->extract($this->tmpdir);
         $zip->close();
+
+        $this->config = $config;
     }
 
     public function import($pageid)
@@ -125,6 +128,18 @@ class DocX
         }
 
         return $file;
+    }
+
+    /**
+     * Get a configuration value
+     *
+     * @param string $key
+     * @param mixed $default default value if the key is not set
+     * @return mixed
+     */
+    public function getConf($key, $default = null)
+    {
+        return $this->config[$key] ?? $default;
     }
 
     public function __destruct()

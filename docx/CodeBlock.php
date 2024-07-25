@@ -10,7 +10,7 @@ class CodeBlock extends AbstractParagraph
     {
         $runs = $this->p->xpath('w:r');
         foreach ($runs as $run) {
-            $tr = new TextRun($run, "\n");
+            $tr = new TextRun($this->docx, $run, "\n");
             $this->text .= $tr->__toString();
         }
     }

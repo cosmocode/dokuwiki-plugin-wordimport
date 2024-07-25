@@ -33,7 +33,10 @@ class EndToEndTest extends DokuWikiTest
      */
     public function testEndToEnd($file, $expected)
     {
-        $docx = new DocX($file);
+        /** @var array $conf */
+        include __DIR__ . '/../conf/default.php'; // load default config
+
+        $docx = new DocX($file, $conf);
         $this->assertEquals(trim($expected), trim($docx->getDocument()));
     }
 }

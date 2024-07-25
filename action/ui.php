@@ -73,7 +73,8 @@ class action_plugin_wordimport_ui extends ActionPlugin
 
     public function import($file, $page)
     {
-        $docx = new DocX($file);
+        $this->loadConfig();
+        $docx = new DocX($file, $this->conf);
         $docx->import($page);
     }
 

@@ -19,16 +19,21 @@ class cli_plugin_wordimport extends CLIPlugin
 
         // main arguments
         $options->registerArgument('docx', 'The .docx Word file', 'true');
-        $options->registerArgument('page', 'The page ID to where the contents should be imported. Will be overwritten if exists.', 'true');
+        $options->registerArgument(
+            'page',
+            'The page ID to where the contents should be imported. Will be overwritten if exists.',
+            'true'
+        );
     }
 
     /** @inheritDoc */
     protected function main(Options $options)
     {
         auth_setup(); // we need this for ACL checks
+        $this->loadConfig();
 
         [$docx, $page] = $options->getArgs();
-        $doc = new DocX($docx);
+        $doc = new DocX($docx, $this->conf);
         $doc->import($page);
     }
 }
