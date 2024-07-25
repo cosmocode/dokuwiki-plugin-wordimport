@@ -21,15 +21,20 @@ abstract class AbstractXMLFile
     abstract protected function parse();
 
     /**
-     * Register all namespaces in the XML file for XPath queries
+     * Register all namespaces that we access in XPath queries
      *
      * @param \SimpleXMLElement $xml
      */
     protected function registerNamespaces($xml)
     {
-        $namespaces = $xml->getDocNamespaces(true);
+        $namespaces = [
+            'rs' => 'http://schemas.openxmlformats.org/package/2006/relationships',
+            'w' => 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
+            'wp' => 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
+            'a' => 'http://schemas.openxmlformats.org/drawingml/2006/main',
+        ];
+
         foreach ($namespaces as $prefix => $namespace) {
-            if (!$prefix) $prefix = 'default';
             $xml->registerXPathNamespace($prefix, $namespace);
         }
     }

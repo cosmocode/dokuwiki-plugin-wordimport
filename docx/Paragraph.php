@@ -27,6 +27,7 @@ class Paragraph extends AbstractParagraph
             $textRun = new TextRun($tr);
             $this->texts[] = $textRun;
         }
+        $this->updateFormattingScores();
 
         $alignment = $this->p->xpath('w:pPr/w:jc');
         if ($alignment) {
@@ -51,14 +52,20 @@ class Paragraph extends AbstractParagraph
             }
 
             $formatting = $text->getFormatting();
+            $formatting = array_keys(array_filter($formatting));
 
-            // close formatting that is not in the current text
-            while ($fStack && !in_array(end($fStack), $formatting)) {
-                $this->closeFormatting($result, array_pop($fStack));
+            // close all formatting that is not in the current text
+            $toclose = array_diff($fStack, $formatting);
+            foreach($toclose as $f) {
+                // we need to make sure all formatting is closed, but we close by popping the
+                // stack. This ensures we don't create invalid nesting
+                while (in_array($f, $fStack)) {
+                    $this->closeFormatting($result, array_pop($fStack));
+                }
             }
 
             // open formatting that is in the current text
-            $new = array_diff($text->getFormatting(), $fStack);
+            $new = array_diff($formatting, $fStack);
             foreach ($new as $f) {
                 $this->openFormatting($result, $f);
                 $fStack[] = $f;
@@ -74,6 +81,20 @@ class Paragraph extends AbstractParagraph
         }
 
         return $result;
+    }
+
+    /**
+     * Update the formatting scores for all texts
+     *
+     * Walks through the texts in reverse order and updates the formatting scores
+     */
+    protected function updateFormattingScores()
+    {
+        $len = count($this->texts);
+        if($len < 2) return;
+        for($i = $len - 2; $i >= 0; $i--) {
+            $this->texts[$i]->updateFormattingScores($this->texts[$i + 1]);
+        }
     }
 
     /**
@@ -118,6 +139,10 @@ class Paragraph extends AbstractParagraph
      */
     public function openFormatting(&$text, $formatting)
     {
+        if(!isset($this->fSyntax[$formatting])) {
+            throw new \RuntimeException("Unknown formatting: $formatting");
+        }
+
         $text .= $this->fSyntax[$formatting][0];
     }
 
@@ -135,6 +160,10 @@ class Paragraph extends AbstractParagraph
         preg_match('/^(.+?)(\s*)$/s', $text, $matches);
         $text = $matches[1];
         $suffix = $matches[2];
+
+        if(!isset($this->fSyntax[$formatting])) {
+            throw new \RuntimeException("Unknown formatting: $formatting");
+        }
 
         $text .= $this->fSyntax[$formatting][1];
         $text .= $suffix;

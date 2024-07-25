@@ -15,7 +15,7 @@ class Relationships extends AbstractXMLFile
         $xml = $this->docx->loadXMLFile('word/_rels/document.xml.rels');
         $this->registerNamespaces($xml);
 
-        foreach ($xml->xpath('//default:Relationship') as $rel) {
+        foreach ($xml->xpath('//rs:Relationship') as $rel) {
             $id = (string)$rel->attributes()->Id;
             $type = basename((string)$rel->attributes()->Type);
             $target = 'word/' . $rel->attributes()->Target;

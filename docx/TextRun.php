@@ -4,12 +4,17 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 class TextRun // this is not a paragraph!
 {
+    /**
+     * @var int[] The formatting of this run and the length of the formatting chain. A value of 0 means
+     *             the formatting is not present, a value of 1 means it is present only in this run. A value
+     *             of 2 or higher means it is present in this run and the n-1 following runs.
+     */
     protected $formatting = [
-        'bold' => false,
-        'italic' => false,
-        'underline' => false,
-        'strike' => false,
-        'mono' => false,
+        'bold' => 0,
+        'italic' => 0,
+        'underline' => 0,
+        'strike' => 0,
+        'mono' => 0,
     ];
 
 
@@ -28,7 +33,7 @@ class TextRun // this is not a paragraph!
         }
 
         $this->parseFormatting($tr);
-        $this->text = (string) ($tr->xpath('w:t')[0] ?? '');
+        $this->text = (string)($tr->xpath('w:t')[0] ?? '');
     }
 
     public function __toString()
@@ -39,11 +44,11 @@ class TextRun // this is not a paragraph!
     /**
      * A list of set formattings on this run
      *
-     * @return string[]
+     * @return int[]
      */
     public function getFormatting()
     {
-        return array_keys(array_filter($this->formatting));
+        return $this->formatting;
     }
 
     public function isWhiteSpace()
@@ -64,26 +69,47 @@ class TextRun // this is not a paragraph!
             switch ($child->getName()) {
                 case 'b':
                 case 'bCs':
-                    $this->formatting['bold'] = true;
+                    $this->formatting['bold'] = 1;
                     break;
                 case 'i':
                 case 'iCs':
                 case 'em':
-                    $this->formatting['italic'] = true;
+                    $this->formatting['italic'] = 1;
                     break;
                 case 'u':
-                    $this->formatting['underline'] = true;
+                    $this->formatting['underline'] = 1;
                     break;
                 case 'strike':
                 case 'dstrike':
-                    $this->formatting['strike'] = true;
+                    $this->formatting['strike'] = 1;
                     break;
                 case 'rFonts':
                     if (in_array($child->attributes('w', true)->ascii, ['Courier New', 'Consolas'])) { // fixme make configurable
-                        $this->formatting['mono'] = true;
+                        $this->formatting['mono'] = 1;
                     }
                     break;
             }
         }
     }
+
+    /**
+     * Use the formatting of the following run to update the scores of this one
+     *
+     * This is used to find the longest chains of formatting
+     *
+     * @param TextRun $nextRun
+     * @return void
+     */
+public function updateFormattingScores(TextRun $nextRun)
+{
+    $next = $nextRun->getFormatting();
+    foreach ($next as $key => $value) {
+        if($this->formatting[$key] === 0) continue;
+        $this->formatting[$key] += $value;
+    }
+
+    // sort by value, longest chains first
+    arsort($this->formatting);
+}
+
 }
