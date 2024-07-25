@@ -33,7 +33,7 @@ class Image extends Paragraph
 
         $pageid = $this->docx->getPageId();
         if ($pageid) {
-            $target = $pageid . '-' . $this->rId . '.' . $ext;
+            $target = $pageid . ':' . $this->rId . '.' . $ext;
             $this->copyImage($src, $target);
         } else {
             $target = $this->rId . '.' . $ext;
