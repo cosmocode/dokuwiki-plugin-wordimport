@@ -10,8 +10,10 @@ class Heading extends AbstractParagraph
 
     public function parse()
     {
-        $this->text = $this->p->xpath('w:r/w:t')[0];
-        $this->level =  substr($this->p->xpath('w:pPr/w:pStyle')[0]->attributes('w', true)->val, -1);
+        $this->text = (string) $this->p->xpath('w:r/w:t')[0];
+        $style = $this->p->xpath('w:pPr/w:pStyle');
+        $styleID = $style[0]->attributes('w', true)->val;
+        $this->level =  substr($this->docx->getStyles()->getStyleName($styleID), -1); // translates to "heading X"
         if ($this->level < 1) $this->level = 1;
         if ($this->level > 5) $this->level = 5;
     }

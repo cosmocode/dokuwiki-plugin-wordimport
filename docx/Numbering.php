@@ -12,12 +12,17 @@ class Numbering extends AbstractXMLFile
         $this->registerNamespaces($xml);
 
         $types = [];
-
         foreach ($xml->xpath('//w:abstractNum') as $num) {
             $id = (int)$num->attributes('w', true)->abstractNumId;
-            $format = (string)$num->xpath('.//w:numFmt')[0]->attributes('w', true)->val;
-            $format = ($format === 'decimal') ? 'ordered' : 'unordered';
-            $types[$id] = $format;
+            $types[$id] = [];
+
+            foreach($num->xpath('.//w:lvl') as $lvl) {
+                $depth = (int)$lvl->attributes('w', true)->ilvl;
+                $lvlType = (string)$lvl->xpath('.//w:numFmt')[0]->attributes('w', true)->val;
+                $lvlType = ($lvlType === 'decimal') ? 'ordered' : 'unordered';
+
+                $types[$id][$depth] = $lvlType;
+            }
         }
 
         foreach ($xml->xpath('//w:num') as $num) {
@@ -25,20 +30,19 @@ class Numbering extends AbstractXMLFile
             $typeId = (int)$num->xpath('.//w:abstractNumId')[0]->attributes('w', true)->val;
             if (isset($types[$typeId])) {
                 $this->numbering[$id] = $types[$typeId];
-            } else {
-                $this->numbering[$id] = 'unordered';
             }
         }
     }
 
     /**
-     * Get the type of the numbering for the given ID
+     * Get the type of the numbering for the given ID and depth
      *
      * @param int $id
+     * @param int $depth the depth of the list starting at 0
      * @return string 'ordered' or 'unordered'
      */
-    public function getType($id)
+    public function getType($id, $depth)
     {
-        return $this->numbering[$id] ?? 'unordered';
+        return $this->numbering[$id][$depth] ?? 'unordered';
     }
 }

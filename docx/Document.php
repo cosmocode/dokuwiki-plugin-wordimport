@@ -47,12 +47,12 @@ class Document extends AbstractXMLFile
         }
 
         // headings
-        if ($p->xpath('w:pPr/w:pStyle[contains(@w:val, "Heading")]')) {
+        if ($this->docx->getStyles()->hasStyle($p, ['heading 1', 'heading 2', 'heading 3', 'heading 4', 'heading 5'])) {
             return new Heading($this->docx, $p);
         }
 
         // lists
-        if ($p->xpath('w:pPr/w:pStyle[@w:val = "ListParagraph"]')) {
+        if ($this->docx->getStyles()->hasStyle($p, ['list paragraph'])) {
             return new ListItem($this->docx, $p);
         }
 

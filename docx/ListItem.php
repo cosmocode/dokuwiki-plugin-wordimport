@@ -4,6 +4,7 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 class ListItem extends Paragraph
 {
+    /** @var int the nesting level starting at 0 */
     protected $level = 0;
     protected $type = 'unordered';
 
@@ -12,7 +13,7 @@ class ListItem extends Paragraph
         parent::parse($this->p);
         $this->level = (int)$this->p->xpath('w:pPr/w:numPr/w:ilvl')[0]->attributes('w', true)->val;
         $id = (int)$this->p->xpath('w:pPr/w:numPr/w:numId')[0]->attributes('w', true)->val;
-        $this->type = $this->docx->getNumbering()->getType($id);
+        $this->type = $this->docx->getNumbering()->getType($id, $this->level);
     }
 
 

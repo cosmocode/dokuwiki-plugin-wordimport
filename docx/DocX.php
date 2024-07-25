@@ -9,6 +9,7 @@ class DocX
     protected $tmpdir;
     protected $relationships;
     protected $numbering;
+    protected $styles;
     protected $document;
     protected $pageId;
 
@@ -71,6 +72,17 @@ class DocX
     {
         if (!$this->relationships) $this->relationships = new Relationships($this);
         return $this->relationships;
+    }
+
+    /**
+     * Parse the style information
+     *
+     * @return Styles
+     */
+    public function getStyles(): Styles
+    {
+        if (!$this->styles) $this->styles = new Styles($this);
+        return $this->styles;
     }
 
     /**
