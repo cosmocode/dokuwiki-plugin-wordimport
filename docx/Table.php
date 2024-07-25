@@ -29,12 +29,9 @@ class Table extends AbstractParagraph
             $text .= '|';
             foreach ($row as $cell) {
                 $text .= $cell->__toString();
-
             }
             $text .= "\n";
         }
         return $text;
     }
-
-
 }

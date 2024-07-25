@@ -111,5 +111,4 @@ class TextRun // this is not a paragraph!
         // sort by value, longest chains first
         arsort($this->formatting);
     }
-
 }

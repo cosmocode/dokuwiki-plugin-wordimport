@@ -4,7 +4,6 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 class Styles extends AbstractXMLFile
 {
-
     protected $id2name = [];
     protected $name2id = [];
 
