@@ -100,16 +100,16 @@ class TextRun // this is not a paragraph!
      * @param TextRun $nextRun
      * @return void
      */
-public function updateFormattingScores(TextRun $nextRun)
-{
-    $next = $nextRun->getFormatting();
-    foreach ($next as $key => $value) {
-        if($this->formatting[$key] === 0) continue;
-        $this->formatting[$key] += $value;
-    }
+    public function updateFormattingScores(TextRun $nextRun)
+    {
+        $next = $nextRun->getFormatting();
+        foreach ($next as $key => $value) {
+            if ($this->formatting[$key] === 0) continue;
+            $this->formatting[$key] += $value;
+        }
 
-    // sort by value, longest chains first
-    arsort($this->formatting);
-}
+        // sort by value, longest chains first
+        arsort($this->formatting);
+    }
 
 }

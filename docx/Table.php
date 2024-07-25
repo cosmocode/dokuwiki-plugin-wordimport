@@ -12,14 +12,12 @@ class Table extends AbstractParagraph
         $rows = $this->p->xpath('w:tr');
         foreach ($rows as $row) {
             $tableRow = [];
-
             $cells = $row->xpath('w:tc');
             foreach ($cells as $cell) {
-                $p = new Paragraph($this->docx, $cell->xpath('w:p')[0]);
-                $p->parse();
-                $tableRow[] = $p;
+                $cell = new TableCell($this->docx, $cell);
+                $cell->parse();
+                $tableRow[] = $cell;
             }
-
             $this->table[] = $tableRow;
         }
     }
@@ -30,11 +28,13 @@ class Table extends AbstractParagraph
         foreach ($this->table as $row) {
             $text .= '|';
             foreach ($row as $cell) {
-                $string = $cell->alignmentPadding($cell->__toString());
-                $text .= " $string |";
+                $text .= $cell->__toString();
+
             }
             $text .= "\n";
         }
         return $text;
     }
+
+
 }
