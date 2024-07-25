@@ -2,10 +2,19 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * The main document
+ *
+ * This class is responsible for parsing the main document.xml file of the Word document.
+ *
+ * It handles all the different paragraph types and creates the final text output
+ */
 class Document extends AbstractXMLFile
 {
+    /** @var string The final DokuWiki syntax for the document */
     protected $text = '';
 
+    /** @inheritdoc */
     protected function parse()
     {
         $xml = $this->docx->loadXMLFile('/word/document.xml');
@@ -34,9 +43,15 @@ class Document extends AbstractXMLFile
         $this->text .= "\n"; // add a final newline
     }
 
+    /**
+     * This factory method creates the correct paragraph object for the given XML element
+     *
+     * @param \SimpleXMLElement $p
+     * @return AbstractParagraph|null
+     */
     public function createParagraph(\SimpleXMLElement $p): ?AbstractParagraph
     {
-        $this->registerNamespaces($p); // it's odd why we need to reregister namespaces here, but it's necessary
+        $this->registerNamespaces($p); // FIXME is this still needed?
 
         // tables
         if ($p->getName() == 'tbl') {
@@ -72,6 +87,7 @@ class Document extends AbstractXMLFile
         return null;
     }
 
+    /** @inheritdoc */
     public function __toString()
     {
         return $this->text;

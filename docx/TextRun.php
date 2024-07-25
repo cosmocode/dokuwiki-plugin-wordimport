@@ -2,6 +2,11 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * A text run
+ *
+ * This is a part of a paragraph with a specific formatting
+ */
 class TextRun // this is not a paragraph!
 {
     /**
@@ -38,7 +43,10 @@ class TextRun // this is not a paragraph!
         $this->text = (string)($tr->xpath('w:t')[0] ?? '');
     }
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return $this->text;
     }
@@ -53,12 +61,19 @@ class TextRun // this is not a paragraph!
         return $this->formatting;
     }
 
+    /**
+     * Check if this run is only whitespace
+     *
+     * @return bool
+     */
     public function isWhiteSpace()
     {
         return ctype_space($this->text);
     }
 
     /**
+     * Parse the formatting of this run
+     *
      * @see http://www.datypic.com/sc/ooxml/e-w_rPr-4.html
      * @param \SimpleXMLElement $textRun
      */

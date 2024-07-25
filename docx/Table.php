@@ -2,11 +2,18 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * A table
+ *
+ * A table is not really a paragraph but we treat it as one for simplicity. However it contains rows of cells which
+ * again contain paragraphs.
+ */
 class Table extends AbstractParagraph
 {
     /** @var Paragraph[][] */
     protected $table = [];
 
+    /** @inheritdoc */
     public function parse()
     {
         $rows = $this->p->xpath('w:tr');
@@ -22,6 +29,7 @@ class Table extends AbstractParagraph
         }
     }
 
+    /** @inheritdoc */
     public function __toString(): string
     {
         $text = '';

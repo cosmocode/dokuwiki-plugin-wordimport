@@ -2,11 +2,19 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * An image
+ *
+ * This is a paragraph with a drawing element containing an image
+ */
 class Image extends Paragraph
 {
+    /** @var string The reference ID for this image */
     protected $rId = '';
+    /** @var string The description text for this image */
     protected $alt = '';
 
+    /** @inheritdoc  */
     public function parse()
     {
         parent::parse();
@@ -18,6 +26,13 @@ class Image extends Paragraph
         $this->alt = $this->clean((string)$alt['descr']);
     }
 
+    /**
+     * The relationship ID points to an image in the relationships file. If we are in an import process,
+     * eg. $docx->getPageId() is set, we copy the image to the media folder here before referencing it in
+     * the DokuWiki syntax. Images are named after their relationship ID.
+     *
+     * @inheritdoc
+     */
     public function __toString(): string
     {
         try {

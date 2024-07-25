@@ -2,10 +2,21 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * Numbering information
+ */
 class Numbering extends AbstractXMLFile
 {
+    /** @var array the numbering information numID -> level -> type */
     protected $numbering = [];
 
+    /**
+     * The files defines "abstract numbers" first. They define a set of rules for each indentation level of a list.
+     * Then the actual numbers are defined. They reference one of the abstract numbers. List items reference one of the
+     * actual numbers.
+     *
+     * @inheritdoc
+     */
     protected function parse()
     {
         $xml = $this->docx->loadXMLFile($this->docx->getRelationships()->getTarget('numbering'));
@@ -37,11 +48,11 @@ class Numbering extends AbstractXMLFile
     /**
      * Get the type of the numbering for the given ID and depth
      *
-     * @param int $id
+     * @param string $id
      * @param int $depth the depth of the list starting at 0
      * @return string 'ordered' or 'unordered'
      */
-    public function getType($id, $depth)
+    public function getType($id, int $depth): string
     {
         return $this->numbering[$id][$depth] ?? 'unordered';
     }

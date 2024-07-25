@@ -2,9 +2,14 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * Paragraphs are the basic building blocks of a Word document
+ */
 abstract class AbstractParagraph
 {
+    /** @var DocX The main object holding everything together */
     protected $docx;
+    /** @var \SimpleXMLElement The paragraph object */
     protected $p;
 
     /**

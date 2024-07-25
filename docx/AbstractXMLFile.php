@@ -2,6 +2,11 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * Word Documents are ZIP files containing a bunch of XML files
+ *
+ * This class is the base for all classes that parse these XML files
+ */
 abstract class AbstractXMLFile
 {
     protected $docx;
@@ -22,6 +27,8 @@ abstract class AbstractXMLFile
 
     /**
      * Register all namespaces that we access in XPath queries
+     *
+     * This needs to be extended when new namespaces are used
      *
      * @param \SimpleXMLElement $xml
      */

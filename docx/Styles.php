@@ -2,11 +2,19 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * The styles of a docx file
+ *
+ * Styles have an ID and a name. The XMLs always use the ID, but we want to work with the name.
+ */
 class Styles extends AbstractXMLFile
 {
+    /** @var array The mapping of style IDs to style names */
     protected $id2name = [];
+    /** @var array The mapping of style names to style IDs */
     protected $name2id = [];
 
+    /** @inheritdoc */
     protected function parse()
     {
         $xml = $this->docx->loadXMLFile('word/styles.xml');

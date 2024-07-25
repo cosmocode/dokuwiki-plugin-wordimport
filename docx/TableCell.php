@@ -2,16 +2,23 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * A table cell
+ *
+ * A table cell is not really a paragraph but we treat it as one for simplicity. However it contains paragraphs.
+ */
 class TableCell extends AbstractParagraph
 {
+    /** @var bool Is this a placeholder for a vertically merged cell? It has no content then */
     protected $vmerge = false;
+    /** @var int The horizontal span of this cell */
     protected $span = 1;
-    /** @var Paragraph[] */
+    /** @var Paragraph[] All contained paragraphs */
     protected $paragraphs = [];
 
+    /** @inheritdoc  */
     public function parse()
     {
-
         $this->p->asXML();
 
         // vertical merge
@@ -24,6 +31,8 @@ class TableCell extends AbstractParagraph
 
         $paragraphs = $this->p->xpath('w:p');
         foreach ($paragraphs as $paragraph) {
+            // FIXME theoretically we would need to use the Document's factory again
+            // because a table might contain images, OTOH a table may not contain headings or lists
             $p = new Paragraph($this->docx, $paragraph);
             $p->parse();
             $this->paragraphs[] = $p;
@@ -32,6 +41,8 @@ class TableCell extends AbstractParagraph
 
     /**
      * Outputs the cell with closing pipes
+     *
+     * The opening pipe is create by the Table class for each row.
      *
      * @inheritdoc
      */

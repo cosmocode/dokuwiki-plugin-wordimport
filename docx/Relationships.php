@@ -2,6 +2,11 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * The relationships of a docx file
+ *
+ * This file contains the relationships between the different parts of the docx file
+ */
 class Relationships extends AbstractXMLFile
 {
     /**

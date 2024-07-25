@@ -2,6 +2,11 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+/**
+ * A paragraph
+ *
+ * This the most common but also most complex type. It can contain multiple text runs each with different formatting
+ */
 class Paragraph extends AbstractParagraph
 {
     /** @var TextRun[] */
@@ -36,8 +41,9 @@ class Paragraph extends AbstractParagraph
     }
 
     /**
+     * This combines the texts of all runs and wraps them in the correct formatting. It tries to create the most
+     * optimal wrapping by closing and opening formatting as needed.
      * @inheritdoc
-     * @fixme this is not optimizing formatting by longest chain
      */
     public function __toString(): string
     {

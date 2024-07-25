@@ -4,17 +4,36 @@ namespace dokuwiki\plugin\wordimport\docx;
 
 use splitbrain\PHPArchive\Zip;
 
+/**
+ * The main DOCX object
+ *
+ * This class is the main entry point for importing a DOCX file into DokuWiki. It handles extracting the
+ * document and offers access to its contents.
+ */
 class DocX
 {
+    /** @var string The temporary directory where the DOCX is extracted */
     protected $tmpdir;
+    /** @var Relationships Relationship references*/
     protected $relationships;
+    /** @var Numbering Numbering definitions for lists */
     protected $numbering;
+    /** @var Styles Style definitions */
     protected $styles;
+    /** @var Document The main document */
     protected $document;
+    /** @var string|null The page id to which this docx is imported */
     protected $pageId;
+    /** @var array The plugin configuration */
     protected $config;
 
-    public function __construct($docx, $config)
+    /**
+     * Create a new DOCX object
+     *
+     * @param string $docx path to the DOCX file
+     * @param array $config the plugin configuration
+     */
+    public function __construct(string $docx, array $config)
     {
         $zip = new Zip();
         $zip->open($docx);
@@ -26,6 +45,12 @@ class DocX
         $this->config = $config;
     }
 
+    /**
+     * Import the DOCX into DokuWiki
+     *
+     * @param string $pageid the page id to import the document into
+     * @throws \Exception
+     */
     public function import($pageid)
     {
         if (auth_quickaclcheck(getNS($pageid) . ':*') < AUTH_DELETE) {
@@ -43,7 +68,7 @@ class DocX
     }
 
     /**
-     * Parse the document
+     * Parse and access the document
      *
      * @return Document
      */
@@ -54,7 +79,7 @@ class DocX
     }
 
     /**
-     * Parse the list number definitions
+     * Parse and access the list number definitions
      *
      * @return Numbering
      * @internal
@@ -66,7 +91,7 @@ class DocX
     }
 
     /**
-     * Parse the relationships
+     * Parse and access the relationships
      *
      * @return Relationships
      * @internal
@@ -78,9 +103,10 @@ class DocX
     }
 
     /**
-     * Parse the style information
+     * Parse and access the style information
      *
      * @return Styles
+     * @internal
      */
     public function getStyles(): Styles
     {
@@ -94,6 +120,7 @@ class DocX
      * Important: this will return null if this is not called within a import process
      *
      * @return string|null
+     * @internal
      */
     public function getPageId(): ?string
     {
@@ -105,6 +132,8 @@ class DocX
      *
      * @param string $file document relative path to the file to load
      * @return \SimpleXMLElement
+     * @throws \Exception when the file does not exist
+     * @internal
      */
     public function loadXMLFile($file)
     {
@@ -118,6 +147,7 @@ class DocX
      * @param string $relative document relative path
      * @return string
      * @throws \Exception when the file does not exist
+     * @internal
      */
     public function getFilePath($relative): string
     {
@@ -136,12 +166,16 @@ class DocX
      * @param string $key
      * @param mixed $default default value if the key is not set
      * @return mixed
+     * @internal
      */
     public function getConf($key, $default = null)
     {
         return $this->config[$key] ?? $default;
     }
 
+    /**
+     * Cleanup the temporary directory
+     */
     public function __destruct()
     {
         io_rmdir($this->tmpdir, true);

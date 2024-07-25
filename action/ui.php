@@ -71,6 +71,14 @@ class action_plugin_wordimport_ui extends ActionPlugin
         $this->html();
     }
 
+    /**
+     * Import a .docx file into a DokuWiki page
+     *
+     * @param string $file Path to the .docx file
+     * @param string $page The page to import to
+     * @return void
+     * @throws Exception
+     */
     public function import($file, $page)
     {
         $this->loadConfig();
@@ -78,6 +86,11 @@ class action_plugin_wordimport_ui extends ActionPlugin
         $docx->import($page);
     }
 
+    /**
+     * Output the upload form
+     *
+     * @return void
+     */
     public function html()
     {
         global $ID;
