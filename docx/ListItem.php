@@ -12,7 +12,7 @@ class ListItem extends Paragraph
     /** @var int the nesting level starting at 0 */
     protected $level = 0;
     /** @var string the type of list, ordered or unordered */
-    protected $type = 'unordered';
+    protected $type = 'ordered'; // ordered seems to be the default in word
 
     /**
      * The type of list is determined looking at the numbering.xml data
@@ -21,9 +21,15 @@ class ListItem extends Paragraph
     public function parse()
     {
         parent::parse();
-        $this->level = (int)$this->p->xpath('w:pPr/w:numPr/w:ilvl')[0]->attributes('w', true)->val;
-        $id = (int)$this->p->xpath('w:pPr/w:numPr/w:numId')[0]->attributes('w', true)->val;
-        $this->type = $this->docx->getNumbering()->getType($id, $this->level);
+
+        $level = $this->p->xpath('w:pPr/w:numPr/w:ilvl');
+        $this->level = $level ? (int)$level[0]->attributes('w', true)->val : 0;
+
+        $idref = $this->p->xpath('w:pPr/w:numPr/w:numId');
+        if($idref) {
+            $id = (int)$idref[0]->attributes('w', true)->val;
+            $this->type = $this->docx->getNumbering()->getType($id, $this->level);
+        }
     }
 
     /** @inheritdoc */

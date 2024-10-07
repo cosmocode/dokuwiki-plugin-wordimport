@@ -19,8 +19,6 @@ class TableCell extends AbstractParagraph
     /** @inheritdoc  */
     public function parse()
     {
-        $this->p->asXML();
-
         // vertical merge
         $vMerge = $this->p->xpath('w:tcPr/w:vMerge');
         $this->vmerge = $vMerge && ((string)$vMerge[0]->attributes('w', true)->val !== 'restart');
