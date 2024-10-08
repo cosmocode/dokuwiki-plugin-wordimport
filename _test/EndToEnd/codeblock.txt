@@ -1,0 +1,9 @@
+This will print out a list of all existing office subnets for your PC. The format should look like:
+
+<code>
+Wireless LAN adapter Wi-Fi:
+
+   IPv4 Address. . . . . . . . . . . : 172.0.0.100
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 172.0.0.1
+</code>

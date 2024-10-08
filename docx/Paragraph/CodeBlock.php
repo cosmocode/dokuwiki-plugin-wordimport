@@ -2,14 +2,17 @@
 
 namespace dokuwiki\plugin\wordimport\docx\Paragraph;
 
+use dokuwiki\plugin\wordimport\docx\Run\Newline;
+use dokuwiki\plugin\wordimport\docx\Run\Text;
+
 /**
  * A code block
  *
  * Word doesn't have a specific code block element. We treat monospace paragraphs as code blocks
  *
- * This is basically a paragraph without any formatting and with real line breaks
+ * This is basically a paragraph but can only contain text and newlines
  */
-class CodeBlock extends AbstractParagraph
+class CodeBlock extends Paragraph
 {
     /** @var string The raw text of the code block */
     protected $text = '';
@@ -17,10 +20,12 @@ class CodeBlock extends AbstractParagraph
     /** @inheritdoc */
     public function parse()
     {
-        $runs = $this->p->xpath('w:r');
-        foreach ($runs as $run) {
-            $tr = new TextRun($this->docx, $run, $this, "\n"); // use real line breaks
-            $this->text .= $tr->__toString();
+        $wrs = $this->p->xpath('w:r');
+        foreach ($wrs as $wr) {
+            $run = $this->docx->createRun($wr, $this);
+            if (!$run instanceof Text && !$run instanceof Newline) continue;
+            $run->parse();
+            $this->text .= $run->__toString();
         }
     }
 

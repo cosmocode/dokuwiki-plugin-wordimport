@@ -269,16 +269,11 @@ class DocX
      */
     public function createRun(\SimpleXMLElement $run, Paragraph $parent): ?AbstractRun
     {
-        if (!empty($run->xpath('w:br'))) {
-            return new Newline($this, $run, $parent);
-        }
-
-
         if (!empty($run->xpath('w:drawing'))) {
             return new Drawing($this, $run, $parent);
         }
 
-        if (!empty($run->xpath('w:t'))) {
+        if (!empty($run->xpath('*[self::w:t or self::w:br]'))) {
             return new Text($this, $run, $parent);
         }
 

@@ -2,6 +2,8 @@
 
 namespace dokuwiki\plugin\wordimport\docx\Run;
 
+use dokuwiki\plugin\wordimport\docx\Paragraph\CodeBlock;
+
 /**
  * A text run
  *
@@ -15,7 +17,21 @@ class Text extends AbstractRun
     public function parse()
     {
         $this->parseFormatting($this->run);
-        $this->text = (string)($this->run->xpath('w:t')[0] ?? '');
+
+        // Text runs can contain multiple text and line breaks elements
+        $elements = $this->run->xpath('*[self::w:t or self::w:br]');
+
+        foreach ($elements as $element) {
+            if ($element->getName() == 't') {
+                $this->text .= (string)$element;
+            } elseif ($element->getName() == 'br') {
+                if ($this->parent instanceof CodeBlock) {
+                    $this->text .= "\n";
+                } else {
+                    $this->text .= '\\\\ ';
+                }
+            }
+        }
     }
 
     /**
