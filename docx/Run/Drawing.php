@@ -2,7 +2,6 @@
 
 namespace dokuwiki\plugin\wordimport\docx\Run;
 
-
 /**
  * A drawing
  *
@@ -10,7 +9,6 @@ namespace dokuwiki\plugin\wordimport\docx\Run;
  */
 class Drawing extends AbstractRun
 {
-
     /** @var string The reference ID for this image */
     protected $rId = '';
     /** @var string The description text for this image */

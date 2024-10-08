@@ -82,5 +82,4 @@ abstract class AbstractRun
         // sort by value, longest chains first
         arsort($this->formatting);
     }
-
 }

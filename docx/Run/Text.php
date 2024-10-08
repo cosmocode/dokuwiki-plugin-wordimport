@@ -11,7 +11,6 @@ use dokuwiki\plugin\wordimport\docx\Paragraph\CodeBlock;
  */
 class Text extends AbstractRun
 {
-
     protected $text = '';
 
     public function parse()

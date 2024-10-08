@@ -26,7 +26,7 @@ class ListItem extends Paragraph
         $this->level = $level ? (int)$level[0]->attributes('w', true)->val : 0;
 
         $idref = $this->p->xpath('w:pPr/w:numPr/w:numId');
-        if($idref) {
+        if ($idref) {
             $id = (int)$idref[0]->attributes('w', true)->val;
             $this->type = $this->docx->getNumbering()->getType($id, $this->level);
         }

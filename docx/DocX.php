@@ -279,5 +279,4 @@ class DocX
 
         return null;
     }
-
 }
