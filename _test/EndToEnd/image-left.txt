@@ -1,1 +1,1 @@
-{{rid6.png |image left}} text right of image
+this is right of the image{{rid6.png |logo left}}

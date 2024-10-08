@@ -15,6 +15,9 @@ class Drawing extends AbstractRun
     protected $rId = '';
     /** @var string The description text for this image */
     protected $alt = '';
+    /** @var bool Is this image floating in the document (otherwise it's inline) */
+    protected $isFloating = false;
+
 
     public function parse()
     {
@@ -23,6 +26,8 @@ class Drawing extends AbstractRun
 
         $alt = $this->run->xpath('w:drawing//wp:docPr')[0];
         $this->alt = $this->clean((string)$alt['descr']);
+
+        $this->isFloating = !empty($this->run->xpath('w:drawing//wp:anchor'));
     }
 
     /**
@@ -54,7 +59,10 @@ class Drawing extends AbstractRun
         }
         $target = cleanID($target);
 
-        $target = $this->parent->alignmentPadding($target); // use the alignment of the parent paragraph
+        if ($this->parent->getAlignment() === 'center' || $this->isFloating) {
+            $target = $this->parent->alignmentPadding($target); // use the alignment of the parent paragraph
+        }
+
         return '{{' . $target . '|' . $this->alt . '}}';
     }
 

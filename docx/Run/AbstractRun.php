@@ -3,13 +3,13 @@
 namespace dokuwiki\plugin\wordimport\docx\Run;
 
 use dokuwiki\plugin\wordimport\docx\DocX;
-use dokuwiki\plugin\wordimport\docx\Paragraph\AbstractParagraph;
+use dokuwiki\plugin\wordimport\docx\Paragraph\Paragraph;
 
 abstract class AbstractRun
 {
     protected DocX $docx;
     protected \SimpleXMLElement $run;
-    protected AbstractParagraph $parent;
+    protected Paragraph $parent;
 
     /**
      * @var int[] The formatting of this run and the length of the formatting chain. A value of 0 means
@@ -25,7 +25,7 @@ abstract class AbstractRun
     ];
 
 
-    public function __construct(DocX $docx, \SimpleXMLElement $run, AbstractParagraph $parent)
+    public function __construct(DocX $docx, \SimpleXMLElement $run, Paragraph $parent)
     {
         $this->docx = $docx;
         $this->run = $run;

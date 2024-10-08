@@ -24,7 +24,8 @@ class EndToEndTest extends DokuWikiTest
             $txt = substr($doc, 0, -4) . 'txt';
             if (!file_exists($txt)) continue;
 
-            yield [$doc, file_get_contents($txt)];
+            $name = basename($doc, '.docx');
+            yield  $name => [$doc, file_get_contents($txt)];
         }
     }
 

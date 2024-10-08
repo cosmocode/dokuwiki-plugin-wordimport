@@ -15,7 +15,7 @@ class Paragraph extends AbstractParagraph
     protected $runs = [];
 
     /** @var string */
-    protected $alignment = '';
+    protected $alignment = 'left';
 
     /** @var array DokuWiki Syntax for the formatting */
     protected $fSyntax = [
