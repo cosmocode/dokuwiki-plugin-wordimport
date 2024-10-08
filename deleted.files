@@ -1,0 +1,21 @@
+# This is a list of files that were present in previous releases
+# but were removed later. They should not exist in your installation.
+_test/ParagraphTest.php
+docx/AbstractParagraph.php
+docx/AbstractXMLFile.php
+docx/CodeBlock.php
+docx/Doc.php
+docx/Document.php
+docx/Heading.php
+docx/Image.php
+docx/ListItem.php
+docx/Numbering.php
+docx/Paragraph.php
+docx/Paragraph/Image.php
+docx/ParagraphFactory.php
+docx/Relationships.php
+docx/Run/Newline.php
+docx/Styles.php
+docx/Table.php
+docx/TableCell.php
+docx/TextRun.php
