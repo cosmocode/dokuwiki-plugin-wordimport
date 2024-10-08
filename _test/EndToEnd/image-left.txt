@@ -1,0 +1,1 @@
+{{rid6.png |image left}} text right of image

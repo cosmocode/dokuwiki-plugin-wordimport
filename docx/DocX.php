@@ -2,13 +2,27 @@
 
 namespace dokuwiki\plugin\wordimport\docx;
 
+use dokuwiki\plugin\wordimport\docx\Paragraph\AbstractParagraph;
+use dokuwiki\plugin\wordimport\docx\Paragraph\CodeBlock;
+use dokuwiki\plugin\wordimport\docx\Paragraph\Heading;
+use dokuwiki\plugin\wordimport\docx\Paragraph\ListItem;
+use dokuwiki\plugin\wordimport\docx\Paragraph\Paragraph;
+use dokuwiki\plugin\wordimport\docx\Paragraph\Table;
+use dokuwiki\plugin\wordimport\docx\Run\AbstractRun;
+use dokuwiki\plugin\wordimport\docx\Run\Drawing;
+use dokuwiki\plugin\wordimport\docx\Run\Newline;
+use dokuwiki\plugin\wordimport\docx\Run\Text;
+use dokuwiki\plugin\wordimport\docx\XMLFile\Document;
+use dokuwiki\plugin\wordimport\docx\XMLFile\Numbering;
+use dokuwiki\plugin\wordimport\docx\XMLFile\Relationships;
+use dokuwiki\plugin\wordimport\docx\XMLFile\Styles;
 use splitbrain\PHPArchive\Zip;
 
 /**
  * The main DOCX object
  *
  * This class is the main entry point for importing a DOCX file into DokuWiki. It handles extracting the
- * document and offers access to its contents.
+ * document, offers access to its contents and provides factory methods
  */
 class DocX
 {
@@ -181,4 +195,94 @@ class DocX
         io_rmdir($this->tmpdir, true);
         if ($this->pageId) unlock($this->pageId);
     }
+
+    /**
+     * Register all namespaces that we access in XPath queries
+     *
+     * This needs to be extended when new namespaces are used
+     *
+     * @param \SimpleXMLElement $xml
+     */
+    public function registerNamespaces($xml)
+    {
+        $namespaces = [
+            'rs' => 'http://schemas.openxmlformats.org/package/2006/relationships',
+            'w' => 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
+            'wp' => 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
+            'a' => 'http://schemas.openxmlformats.org/drawingml/2006/main',
+        ];
+
+        foreach ($namespaces as $prefix => $namespace) {
+            $xml->registerXPathNamespace($prefix, $namespace);
+        }
+    }
+
+    /**
+     * This factory method creates the correct paragraph object for the given XML element
+     *
+     * @param \SimpleXMLElement $p
+     * @return AbstractParagraph|null
+     */
+    public function createParagraph(\SimpleXMLElement $p): ?AbstractParagraph
+    {
+        $this->registerNamespaces($p);
+
+        // tables
+        if ($p->getName() == 'tbl') {
+            return new Table($this, $p);
+        }
+
+        // code blocks
+        if ($match = $p->xpath('w:pPr/w:rPr/w:rFonts')) {
+            if (in_array($match[0]->attributes('w', true)->ascii, $this->getConf('codefonts'))) {
+                return new CodeBlock($this, $p);
+            }
+        }
+
+        // headings
+        if (
+            $this->getStyles()->hasStyle($p, ['heading 1', 'heading 2', 'heading 3', 'heading 4', 'heading 5']) &&
+            $p->xpath('w:r/w:t') # headings must have text
+        ) {
+            return new Heading($this, $p);
+        }
+
+        // lists
+        if ($this->getStyles()->hasStyle($p, ['list paragraph'])) {
+            return new ListItem($this, $p);
+        }
+
+        // images
+        #if ($p->xpath('w:r/w:drawing/wp:inline//a:blip')) {
+        #    return new Image($this->docx, $p);
+        #}
+
+        // "normal" paragraphs
+        //if ($p->xpath('w:r')) {
+        return new Paragraph($this, $p);
+        //}
+        //return null;
+    }
+
+    /**
+     * This factory method creates the correct run object for the given XML element
+     */
+    public function createRun(\SimpleXMLElement $run, Paragraph $parent): ?AbstractRun
+    {
+        if (!empty($run->xpath('w:br'))) {
+            return new Newline($this, $run, $parent);
+        }
+
+
+        if (!empty($run->xpath('w:drawing'))) {
+            return new Drawing($this, $run, $parent);
+        }
+
+        if (!empty($run->xpath('w:t'))) {
+            return new Text($this, $run, $parent);
+        }
+
+        return null;
+    }
+
 }

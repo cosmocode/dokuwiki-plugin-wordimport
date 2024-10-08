@@ -1,0 +1,1 @@
+This is an {{rid6.png|logo inline}} here.

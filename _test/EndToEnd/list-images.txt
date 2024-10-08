@@ -1,0 +1,16 @@
+  - Eins
+  - {{rid5.png|Ein Bild, das Text, Screenshot, Schrift, Reihe enthält.  Automatisch generierte Beschreibung}}
+  - Zwei
+  - {{rid6.png|Ein Bild, das Text, Schrift, Screenshot, weiß enthält.  Automatisch generierte Beschreibung}}
+  - Drei
+  - {{rid7.png|}}
+  - Vier
+  - {{rid8.png|Ein Bild, das Logo, Symbol, Grafiken, Design enthält.  Automatisch generierte Beschreibung}}
+  - Fünf
+  - {{rid9.png|Ein Bild, das Text, Schrift, Screenshot, Quittung enthält.  Automatisch generierte Beschreibung}}
+  - Sechs
+  - {{rid10.png|Ein Bild, das Text, Screenshot, Design enthält.  Automatisch generierte Beschreibung}}
+  - Sieben
+  - {{rid11.png|Ein Bild, das Text, Schrift, Screenshot, Reihe enthält.  Automatisch generierte Beschreibung}}
+  - Acht
+  - {{rid12.png|Ein Bild, das Text, Schrift, weiß, Screenshot enthält.  Automatisch generierte Beschreibung}}

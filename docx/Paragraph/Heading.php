@@ -1,6 +1,6 @@
 <?php
 
-namespace dokuwiki\plugin\wordimport\docx;
+namespace dokuwiki\plugin\wordimport\docx\Paragraph;
 
 /**
  * A heading

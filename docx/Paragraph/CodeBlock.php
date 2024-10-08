@@ -1,6 +1,6 @@
 <?php
 
-namespace dokuwiki\plugin\wordimport\docx;
+namespace dokuwiki\plugin\wordimport\docx\Paragraph;
 
 /**
  * A code block
@@ -19,7 +19,7 @@ class CodeBlock extends AbstractParagraph
     {
         $runs = $this->p->xpath('w:r');
         foreach ($runs as $run) {
-            $tr = new TextRun($this->docx, $run, "\n"); // use real line breaks
+            $tr = new TextRun($this->docx, $run, $this, "\n"); // use real line breaks
             $this->text .= $tr->__toString();
         }
     }

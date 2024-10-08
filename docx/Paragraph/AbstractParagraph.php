@@ -1,6 +1,8 @@
 <?php
 
-namespace dokuwiki\plugin\wordimport\docx;
+namespace dokuwiki\plugin\wordimport\docx\Paragraph;
+
+use dokuwiki\plugin\wordimport\docx\DocX;
 
 /**
  * Paragraphs are the basic building blocks of a Word document

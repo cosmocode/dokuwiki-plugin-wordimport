@@ -1,6 +1,8 @@
 <?php
 
-namespace dokuwiki\plugin\wordimport\docx;
+namespace dokuwiki\plugin\wordimport\docx\Paragraph;
+
+use dokuwiki\plugin\wordimport\docx\Run\AbstractRun;
 
 /**
  * A paragraph
@@ -9,8 +11,8 @@ namespace dokuwiki\plugin\wordimport\docx;
  */
 class Paragraph extends AbstractParagraph
 {
-    /** @var TextRun[] */
-    protected $texts = [];
+    /** @var AbstractRun[] */
+    protected $runs = [];
 
     /** @var string */
     protected $alignment = '';
@@ -29,8 +31,10 @@ class Paragraph extends AbstractParagraph
     {
         $trs = $this->p->xpath('w:r');
         foreach ($trs as $tr) {
-            $textRun = new TextRun($this->docx, $tr);
-            $this->texts[] = $textRun;
+            $run = $this->docx->createRun($tr, $this);
+            if (!$run instanceof AbstractRun) continue;
+            $this->runs[] = $run;
+            $run->parse();
         }
         $this->updateFormattingScores();
 
@@ -50,14 +54,14 @@ class Paragraph extends AbstractParagraph
         $result = '';
         $fStack = [];
 
-        foreach ($this->texts as $text) {
+        foreach ($this->runs as $run) {
             // we don't want to wrap whitespace in formatting
-            if ($text->isWhiteSpace()) {
-                $result .= $text->__toString();
+            if ($run->isWhiteSpace()) {
+                $result .= $run->__toString();
                 continue;
             }
 
-            $formatting = $text->getFormatting();
+            $formatting = $run->getFormatting();
             $formatting = array_keys(array_filter($formatting));
 
             // close all formatting that is not in the current text
@@ -78,7 +82,7 @@ class Paragraph extends AbstractParagraph
             }
 
             // add the text
-            $result .= $text->__toString();
+            $result .= $run->__toString();
         }
 
         // close remaining formatting
@@ -96,10 +100,10 @@ class Paragraph extends AbstractParagraph
      */
     protected function updateFormattingScores()
     {
-        $len = count($this->texts);
+        $len = count($this->runs);
         if ($len < 2) return;
         for ($i = $len - 2; $i >= 0; $i--) {
-            $this->texts[$i]->updateFormattingScores($this->texts[$i + 1]);
+            $this->runs[$i]->updateFormattingScores($this->runs[$i + 1]);
         }
     }
 

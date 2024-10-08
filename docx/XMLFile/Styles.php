@@ -1,6 +1,6 @@
 <?php
 
-namespace dokuwiki\plugin\wordimport\docx;
+namespace dokuwiki\plugin\wordimport\docx\XMLFile;
 
 /**
  * The styles of a docx file
@@ -18,13 +18,10 @@ class Styles extends AbstractXMLFile
     protected function parse()
     {
         $xml = $this->docx->loadXMLFile('word/styles.xml');
-        $this->registerNamespaces($xml);
-
+        $this->docx->registerNamespaces($xml);
 
         $styles = $xml->xpath('//w:style');
         foreach ($styles as $style) {
-            $x = $style->asXML();
-
             $id = strtolower($style->attributes('w', true)->styleId);
             $name = strtolower($style->xpath('w:name')[0]->attributes('w', true)->val);
             $this->id2name[$id] = $name;

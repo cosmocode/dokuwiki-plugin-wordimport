@@ -1,6 +1,6 @@
 <?php
 
-namespace dokuwiki\plugin\wordimport\docx;
+namespace dokuwiki\plugin\wordimport\docx\XMLFile;
 
 /**
  * The relationships of a docx file
@@ -18,7 +18,7 @@ class Relationships extends AbstractXMLFile
     protected function parse()
     {
         $xml = $this->docx->loadXMLFile('word/_rels/document.xml.rels');
-        $this->registerNamespaces($xml);
+        $this->docx->registerNamespaces($xml);
 
         foreach ($xml->xpath('//rs:Relationship') as $rel) {
             $id = (string)$rel->attributes()->Id;

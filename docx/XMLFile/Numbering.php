@@ -1,6 +1,6 @@
 <?php
 
-namespace dokuwiki\plugin\wordimport\docx;
+namespace dokuwiki\plugin\wordimport\docx\XMLFile;
 
 /**
  * Numbering information
@@ -20,7 +20,7 @@ class Numbering extends AbstractXMLFile
     protected function parse()
     {
         $xml = $this->docx->loadXMLFile($this->docx->getRelationships()->getTarget('numbering'));
-        $this->registerNamespaces($xml);
+        $this->docx->registerNamespaces($xml);
 
         $types = [];
         foreach ($xml->xpath('//w:abstractNum') as $num) {
