@@ -80,7 +80,11 @@ class Drawing extends AbstractRun
             return;
         }
 
-        $auth = auth_quickaclcheck(getNS($target) . ':*');
+        if( php_sapi_name() === 'cli' ) {
+            $auth = AUTH_ADMIN;
+        } else {
+            $auth = auth_quickaclcheck(getNS($target) . ':*');
+        }
         $res = media_save(['name' => $src], $target, true, $auth, 'copy');
         if (is_array($res)) {
             throw new \Exception('Failed to save media: ' . $res[0]);

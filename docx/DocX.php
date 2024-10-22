@@ -28,7 +28,7 @@ class DocX
 {
     /** @var string The temporary directory where the DOCX is extracted */
     protected $tmpdir;
-    /** @var Relationships Relationship references*/
+    /** @var Relationships Relationship references */
     protected $relationships;
     /** @var Numbering Numbering definitions for lists */
     protected $numbering;
@@ -67,7 +67,7 @@ class DocX
      */
     public function import($pageid)
     {
-        if (auth_quickaclcheck(getNS($pageid) . ':*') < AUTH_DELETE) {
+        if (php_sapi_name() !== 'cli' && auth_quickaclcheck(getNS($pageid) . ':*') < AUTH_DELETE) {
             throw new \Exception('You do not have enough permission to import into this namespace');
         }
 
