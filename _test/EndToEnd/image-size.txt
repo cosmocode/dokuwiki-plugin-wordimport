@@ -1,0 +1,9 @@
+{{rid6.png|}}original
+
+
+
+{{rid6.png?64x64|}}smaller
+
+
+
+{{rid6.png?256x256|}}larger

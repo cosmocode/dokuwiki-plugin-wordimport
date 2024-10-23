@@ -15,6 +15,10 @@ class Drawing extends AbstractRun
     protected $alt = '';
     /** @var bool Is this image floating in the document (otherwise it's inline) */
     protected $isFloating = false;
+    /** @var int width to use in pixel */
+    protected int $width = 0;
+    /** @var int $height to use in pixel */
+    protected int $height = 0;
 
 
     public function parse()
@@ -26,6 +30,13 @@ class Drawing extends AbstractRun
         $this->alt = $this->clean((string)$alt['descr']);
 
         $this->isFloating = !empty($this->run->xpath('w:drawing//wp:anchor'));
+
+        $extent = $this->run->xpath('w:drawing//wp:extent');
+        if (isset($extent[0])) {
+            $this->width = $this->emuToPixel((int)$extent[0]['cx']);
+            $this->height = $this->emuToPixel((int)$extent[0]['cy']);
+        }
+
     }
 
     /**
@@ -57,6 +68,19 @@ class Drawing extends AbstractRun
         }
         $target = cleanID($target);
 
+        // add resizing if wanted size differs from original image size
+        $size = getimagesize($src);
+        $oWidth = $size[0];
+        $oHeight = $size[1];
+        if (
+            $this->width && $this->height && (
+                abs($this->width - $oWidth) > 5 ||
+                abs($this->height - $oHeight) > 5
+            )
+        ) {
+            $target .= '?' . $this->width . 'x' . $this->height;
+        }
+
         if ($this->parent->getAlignment() === 'center' || $this->isFloating) {
             $target = $this->parent->alignmentPadding($target); // use the alignment of the parent paragraph
         }
@@ -80,7 +104,7 @@ class Drawing extends AbstractRun
             return;
         }
 
-        if( php_sapi_name() === 'cli' ) {
+        if (php_sapi_name() === 'cli') {
             $auth = AUTH_ADMIN;
         } else {
             $auth = auth_quickaclcheck(getNS($target) . ':*');
@@ -103,5 +127,17 @@ class Drawing extends AbstractRun
     protected function clean($string): string
     {
         return str_replace(["\n", '{', '}', '|'], ' ', $string);
+    }
+
+
+    /**
+     * Convert Office' weird measurements to pixels
+     *
+     * @param int $emu English Metric Units
+     * @return int
+     */
+    protected function emuToPixel($emu)
+    {
+        return (int)round($emu / 9525);
     }
 }
