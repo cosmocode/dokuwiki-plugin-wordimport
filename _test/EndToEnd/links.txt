@@ -1,0 +1,3 @@
+Go to Microsoft here: [[https://microsoft.com]]
+
+Go to [[https://www.microsoft.com/|Microsoft home page]]

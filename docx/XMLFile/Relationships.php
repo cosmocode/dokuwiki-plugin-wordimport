@@ -21,9 +21,14 @@ class Relationships extends AbstractXMLFile
         $this->docx->registerNamespaces($xml);
 
         foreach ($xml->xpath('//rs:Relationship') as $rel) {
-            $id = (string)$rel->attributes()->Id;
+            $id = (string) $rel->attributes()->Id;
             $type = basename((string)$rel->attributes()->Type);
-            $target = 'word/' . $rel->attributes()->Target;
+
+            if($rel->attributes()->TargetMode == 'External') {
+                $target = (string) $rel->attributes()->Target;
+            } else {
+                $target = 'word/' . $rel->attributes()->Target;
+            }
 
             if (!isset($this->relationships[$type])) {
                 $this->relationships[$type] = [];
