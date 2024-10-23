@@ -11,6 +11,7 @@ use dokuwiki\plugin\wordimport\docx\Paragraph\Table;
 use dokuwiki\plugin\wordimport\docx\Run\AbstractRun;
 use dokuwiki\plugin\wordimport\docx\Run\Drawing;
 use dokuwiki\plugin\wordimport\docx\Run\Hyperlink;
+use dokuwiki\plugin\wordimport\docx\Run\Math;
 use dokuwiki\plugin\wordimport\docx\Run\Newline;
 use dokuwiki\plugin\wordimport\docx\Run\Text;
 use dokuwiki\plugin\wordimport\docx\XMLFile\Document;
@@ -272,6 +273,10 @@ class DocX
     {
         if (!empty($run->xpath('w:drawing'))) {
             return new Drawing($this, $run, $parent);
+        }
+
+        if($run->getName() == 'oMath') {
+            return new Math($this, $run, $parent);
         }
 
         if ($run->getName() == 'hyperlink') {

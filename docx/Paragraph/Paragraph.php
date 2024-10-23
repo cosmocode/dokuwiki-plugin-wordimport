@@ -29,7 +29,7 @@ class Paragraph extends AbstractParagraph
     /** @inheritdoc */
     public function parse()
     {
-        $trs = $this->p->xpath('w:r | w:hyperlink');
+        $trs = $this->p->xpath('w:r | w:hyperlink | m:oMath | m:oMathPara/m:oMath');
         foreach ($trs as $tr) {
             $run = $this->docx->createRun($tr, $this);
             if (!$run instanceof AbstractRun) continue;
