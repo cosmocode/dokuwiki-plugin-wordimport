@@ -37,12 +37,14 @@ abstract class AbstractParagraph
     /**
      * Allows to merge this paragraph with the previous one if that was of the same type
      *
-     * This means instead of adding two lines only one is added between the two paragraphs. Used
-     * for example for list items.
+     * When false is returned no joining is done and the paragraphs are joined with two
+     * newlines. Otherwise an array with two integers is expected. The first one is the number
+     * of bytes to remove from the previous paragraph (eg. the closing syntax) and the second
+     * one is the number of bytes to remove from this paragraph (eg. the opening syntax).
      *
-     * @return bool
+     * @return bool|int[]
      */
-    public function mergeToPrevious(): bool
+    public function mergeToPrevious()
     {
         return false;
     }

@@ -7,3 +7,11 @@ Wireless LAN adapter Wi-Fi:
    Subnet Mask . . . . . . . . . . . : 255.255.255.0
    Default Gateway . . . . . . . . . : 172.0.0.1
 </code>
+
+Now some doc block paragraphs that should be joined
+
+<code>
+first line
+second line
+third line
+</code>

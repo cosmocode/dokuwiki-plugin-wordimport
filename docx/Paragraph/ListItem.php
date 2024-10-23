@@ -41,8 +41,9 @@ class ListItem extends Paragraph
     }
 
     /** @inheritdoc */
-    public function mergeToPrevious(): bool
+    public function mergeToPrevious()
     {
-        return true;
+        // '\n, ''
+        return [1, 0];
     }
 }

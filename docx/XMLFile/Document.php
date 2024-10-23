@@ -28,21 +28,27 @@ class Document extends AbstractXMLFile
             if (!$obj instanceof AbstractParagraph) continue;
             $obj->parse();
 
+            // new line before the paragraph
+            $this->text .= "\n";
+
+            // should this merge with previous?
             if (
                 $obj->mergeToPrevious() &&
                 $last &&
                 get_class($obj) === get_class($last)
             ) {
-                $this->text .= "\n";
-            } elseif ($last) {
-                $this->text .= "\n\n";
+                [$rmPrev, $rmNow] = $obj->mergeToPrevious();
+                $this->text = substr($this->text, 0, -$rmPrev);
+            } else {
+                $rmNow = 0;
             }
 
-            $this->text .= $obj; // toString
-            $last = $obj;
-        }
+            $this->text .= substr($obj, $rmNow); // toString() is called here
+            $last = $obj; // remember for next iteration
 
-        $this->text .= "\n"; // add a final newline
+            // new line after the paragraph
+            $this->text .= "\n";
+        }
     }
 
 

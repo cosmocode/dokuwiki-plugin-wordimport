@@ -2,7 +2,6 @@
 
 namespace dokuwiki\plugin\wordimport\docx\Paragraph;
 
-use dokuwiki\plugin\wordimport\docx\Run\Newline;
 use dokuwiki\plugin\wordimport\docx\Run\Text;
 
 /**
@@ -18,12 +17,19 @@ class CodeBlock extends Paragraph
     protected $text = '';
 
     /** @inheritdoc */
+    public function mergeToPrevious()
+    {
+        // '</code>\n\n', '<code>\n'
+        return [9, 7];
+    }
+
+    /** @inheritdoc */
     public function parse()
     {
         $wrs = $this->p->xpath('w:r');
         foreach ($wrs as $wr) {
             $run = $this->docx->createRun($wr, $this);
-            if (!$run instanceof Text && !$run instanceof Newline) continue;
+            if (!$run instanceof Text) continue;
             $run->parse();
             $this->text .= $run->__toString();
         }
