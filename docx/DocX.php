@@ -250,7 +250,10 @@ class DocX
         }
 
         // lists
-        if ($this->getStyles()->hasStyle($p, ['list paragraph'])) {
+        if (
+            $this->getStyles()->hasStyle($p, ['list paragraph']) ||
+            $p->xpath('w:pPr/w:numPr')
+        ) {
             return new ListItem($this, $p);
         }
 
