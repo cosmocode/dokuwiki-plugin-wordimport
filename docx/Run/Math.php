@@ -14,27 +14,33 @@ class Math extends AbstractRun
             return;
         }
 
-        $xsl = new \DOMDocument();
-        $xsl->load(__DIR__ . '/../../xslt/omml2mathml.xsl');
+        // convert the current run (the omath block) into it's own DOMDocument
+        $oMathSxe = dom_import_simplexml($this->run);
+        $oMathDom = new \DOMDocument();
+        $oMathSxe = $oMathDom->importNode($oMathSxe, true);
+        $oMathSxe = $oMathDom->appendChild($oMathSxe);
 
-        $proc = new \XSLTProcessor();
-        $proc->importStylesheet($xsl);
+        // load the XSLT stylesheet
+        $xsltDom = new \DOMDocument();
+        $xsltDom->load(__DIR__ . '/../../xslt/omml2mathml.xsl');
 
-        $newdom = $proc->transformToXml($this->run);
+        // transform the omath block into MathML
+        $processor = new \XSLTProcessor();
+        $processor->importStylesheet($xsltDom);
+        $mmlXml = $processor->transformToXml($oMathDom);
 
-        $dom = new \DOMDocument();
-        $dom->loadXML($newdom);
-
-        // Remove the existing namespaces and set a default namespace
-        $root = $dom->documentElement;
+        // create a new DOMDocument from the xml to manipulate the namespaces
+        $mmlDom = new \DOMDocument();
+        $mmlDom->loadXML($mmlXml);
+        $root = $mmlDom->documentElement;
         $root->removeAttributeNS('http://www.w3.org/1998/Math/MathML', 'mml');
         $root->removeAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/math', 'm');
         $root->setAttribute("xmlns", "http://www.w3.org/1998/Math/MathML");  // Set default namespace
 
         // Now, when saved, the default namespace will be applied
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = false;
-        $this->mathml = $dom->saveXML($root);
+        $mmlDom->preserveWhiteSpace = false;
+        $mmlDom->formatOutput = false;
+        $this->mathml = $mmlDom->saveXML($root);
     }
 
     /** @inheritdoc */
