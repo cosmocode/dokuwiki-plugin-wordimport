@@ -81,7 +81,7 @@ class Drawing extends AbstractRun
             $target .= '?' . $this->width . 'x' . $this->height;
         }
 
-        if ($this->parent->getAlignment() === 'center' || $this->isFloating) {
+        if ($this->parent->getAlignment() !== 'left' || $this->isFloating) {
             $target = $this->parent->alignmentPadding($target); // use the alignment of the parent paragraph
         }
 
