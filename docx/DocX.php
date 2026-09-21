@@ -275,7 +275,9 @@ class DocX
      */
     public function createRun(\SimpleXMLElement $run, Paragraph $parent): ?AbstractRun
     {
-        if (!empty($run->xpath('w:drawing'))) {
+        $this->registerNamespaces($run);
+
+        if (!empty($run->xpath('w:drawing//a:blip'))) {
             return new Drawing($this, $run, $parent);
         }
 
